@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TallyGo Map</title>
+    <meta name="description" content="TallGo Map">
+    <meta name="author" content="TallyGo">
+    <script src="node_modules/mapbox-gl/dist/mapbox-gl-dev.js"></script>
+    <link rel="stylesheet" media="screen" href="node_modules/mapbox-gl/dist/mapbox-gl.css" />
+    <script src="dist/browser.js"></script>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map = new tallyGoKit.Map({
+        container: "map",
+        apiToken: "<YOUR API TOKEN>"
+      })
+    </script>
+  </body>
+</html>
