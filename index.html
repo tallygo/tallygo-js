@@ -16,6 +16,13 @@
         container: "map",
         apiToken: "<YOUR API TOKEN>"
       })
+      var nav = new mapboxgl.NavigationControl();
+      map.addControl(nav, 'top-left');
+
+      tallyGoKit.loadJSON('route.json', function(response) {
+        let route = new tallyGoKit.Route(JSON.parse(response))
+        console.log("Here")
+      });
     </script>
   </body>
 </html>
