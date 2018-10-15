@@ -1,11 +1,11 @@
 // @flow
 
-function extend(dest, ...sources) {
-  for (const src of sources) {
-    for (const k in src) { dest[k] = src[k] }
-  }
-  return dest;
-}
+import {
+  extend,
+  getElement,
+  setHeightStyle,
+  styleUrl
+} from './utils'
 
 const defaultOptions = {
   center: [-95.84, 37.78],
@@ -45,42 +45,10 @@ const defaultOptions = {
 export default class Map extends mapboxgl.Map {
   constructor(options) {
     options = extend({}, defaultOptions, options)
-
-    this.apiToken = options.apiToken
-    this.traffic = options.traffic
-    this.styleHost = options.styleHost
-    this._container = this.findContainer(options.container)
-    this.setHeightStyle()
-
-    options['container'] = this._container
-    options['style'] = this.styleUrl()
+    options['container'] = getElement(options.container)
+    options['style'] = styleUrl(options)
+    setHeightStyle(options.container)
 
     super(options)
-  }
-
-  setHeightStyle() {
-    document.documentElement.style.height = "100%"
-    document.body.style.height = "100%"
-    document.body.style.margin = 0
-    this._container.style.height = "100%"
-  }
-
-  styleUrl() {
-    return `https://${this.styleHost}/map-style.json?traffic=${this.traffic}&apiKey=${this.apiToken}`
-  }
-
-  findContainer(container) {
-    let _container
-    if (typeof container === 'string') {
-      _container = window.document.getElementById(container);
-      if (!_container) {
-        throw new Error(`Container '${container}' not found.`)
-      }
-    } else if (container instanceof HTMLElement) {
-      _container = container
-    } else {
-      throw new Error(`Invalid type: 'container' must be a String or HTMLElement.`)
-    }
-    return _container
   }
 }

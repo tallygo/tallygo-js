@@ -1,8 +1,10 @@
 // @flow
 
 import Map from './map'
+import Route from './route'
+import { loadJSON } from './utils'
 
-const exported = { Map }
+const exported = { Map, Route, loadJSON }
 
 /**
  * The version of TallyGoKit-JS in use as specified in `package.json`,
