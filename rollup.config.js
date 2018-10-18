@@ -20,32 +20,33 @@ function flow() {
 }
 
 export default [
-	// browser-friendly umd build
-	{
-		input: 'src/index.js',
+  // browser-friendly umd build
+  {
+    input: 'src/index.js',
     external: ['mapbox-gl'],
-		output: {
-			name: 'tallyGoKit',
-			file: pkg.browser,
+    output: {
+      globals: {'mapbox-gl': 'mapboxgl'},
+      name: 'tallyGoKit',
+      file: pkg.browser,
       format: 'umd',
       sourcemap: production ? true : 'inline'
-		},
-		plugins: [
+    },
+    plugins: [
       flow(),
       buble({transforms: {dangerousForOf: true}, objectAssign: "Object.assign"}),
-			resolve(),
-			commonjs(),
+      resolve(),
+      commonjs(),
       production ? uglify() : false
-		]
-	},
-	{
-		input: 'src/index.js',
-		external: ['mapbox-gl'],
-		output: [
+    ]
+  },
+  {
+    input: 'src/index.js',
+    external: ['mapbox-gl'],
+    output: [
       // node friendly commonjs build
-			{ file: pkg.main, format: 'cjs' },
+      { file: pkg.main, format: 'cjs' },
       // bundler friendly module build
-			{ file: pkg.module, format: 'es' }
-		]
-	}
+      { file: pkg.module, format: 'es' }
+    ]
+  }
 ].filter(Boolean)

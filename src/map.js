@@ -1,5 +1,7 @@
 // @flow
 
+import * as mapboxgl from 'mapbox-gl'
+
 import {
   extend,
   getElement,
@@ -13,7 +15,7 @@ const defaultOptions = {
   styleHost: 'maptiles-stg.tallygo.com',
   traffic: 0,
   zoom: 4
-};
+}
 
 /**
  * The `Map` object represents the map on your page. It is thin
@@ -39,7 +41,7 @@ const defaultOptions = {
  *   styleHost: 'maptiles-stg.tallygo.com',
  *   traffic: 0,
  *   zoom: 4
- * });
+ * })
  */
 
 export default class Map extends mapboxgl.Map {
@@ -50,5 +52,66 @@ export default class Map extends mapboxgl.Map {
     setHeightStyle(options.container)
 
     super(options)
+    this.geojson = {}
+    this.popupLayers = []
+  }
+
+  // clear clears all layers and sources added by addLayer
+  resetLayers() {
+    // Object.keys(this.geojson).forEach(function (id, i) {
+    //   this.removeLayer(id)
+    //   this.removeSource(id)
+    // })
+    this.geojson = {}
+    this.popupLayers = []
+  }
+
+  // addLayer adds layer and registers its ID, which is then used by
+  // resetLayers. It assumes that layer's source data is of type geojson.
+  addLayer(layer) {
+    // capture data here to eventually store it later; Map.addLayer mutates
+    // layer object
+    var data = layer.source.data
+
+    if (data.type === 'FeatureCollection') {
+      // data.features.forEach(function (f, i) {
+      //   f.properties.featureIndex = i
+      //   f.properties.layer = layer.id
+      // })
+    }
+
+    if (this.getLayer('startEnd') === undefined) {
+      // TODO: resolve conflict with mapboxgl.Map function with same name
+      // TODO: Otherwise this will result in a recursive call :(
+      this.addLayer(layer)
+    } else {
+      this.addLayer(layer, 'startEnd')
+    }
+
+    this.geojson[layer.id] = data
+    if (layer.id.startsWith('points-')) {
+      this.popupLayers.push(layer.id)
+    }
+  }
+
+  removeLayer(id) {
+    if (!this.geojson.hasOwnProperty(id)) {
+      return
+    }
+    delete this.geojson[id]
+
+    if (this.getLayer(id) !== undefined) {
+      // TODO: resolve conflict with mapboxgl.Map function with same name
+      // TODO: Otherwise this will result in a recursive call :(
+      this.removeLayer(id)
+    }
+
+    // when layer is removed the resource associated with it remains
+    this.removeSource(id)
+
+    let i
+    while ((i = this.popupLayers.indexOf(id)) >= 0) {
+      this.popupLayers.splice(i, 1)
+    }
   }
 }
