@@ -9,18 +9,20 @@
  * @private
  */
 export function extend(dest, ...sources) {
-  for (const src of sources) {
-    for (const k in src) {dest[k] = src[k]}
-  }
-  return dest;
+  sources.forEach(function(src) {
+    Object.keys(src).forEach(function(key) {
+      dest[key] = src[key]
+    })
+  })
+  return dest
 }
 
 export function loadJSON(path, callback) {
   var xobj = new XMLHttpRequest()
-  xobj.overrideMimeType("application/json")
+  xobj.overrideMimeType('application/json')
   xobj.open('GET', path, true)
   xobj.onreadystatechange = function () {
-    if (xobj.readyState == 4 && xobj.status == "200") {
+    if (xobj.readyState === 4 && xobj.status === 200) {
       callback(xobj.responseText)
     }
   }
@@ -34,7 +36,7 @@ export function styleUrl(options) {
 export function getElement(container) {
   let _container
   if (typeof container === 'string') {
-    _container = window.document.getElementById(container);
+    _container = window.document.getElementById(container)
     if (!_container) {
       throw new Error(`Container '${container}' not found.`)
     }
@@ -47,8 +49,8 @@ export function getElement(container) {
 }
 
 export function setHeightStyle(container) {
-  document.documentElement.style.height = "100%"
-  document.body.style.height = "100%"
+  document.documentElement.style.height = '100%'
+  document.body.style.height = '100%'
   document.body.style.margin = 0
-  container.style.height = "100%"
+  container.style.height = '100%'
 }
