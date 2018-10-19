@@ -31,7 +31,7 @@ export default class Route {
   }
 
   buildPoints(firstSegPoints) {
-    let points = {
+    const points = {
       'type': 'FeatureCollection',
       'features': []
     }
@@ -87,7 +87,7 @@ export default class Route {
   }
 
   buildSayPoints(points) {
-    let sayPoints = {
+    const sayPoints = {
       'type': 'FeatureCollection',
       'features': []
     }
@@ -106,7 +106,7 @@ export default class Route {
   }
 
   buildTurnPoints(points) {
-    let turnPoints = {
+    const turnPoints = {
       'type': 'FeatureCollection',
       'features': []
     }
@@ -126,7 +126,7 @@ export default class Route {
   }
 
   assignLineColors(points) {
-    let lineColors = []
+    const lineColors = []
     let lastColor
     lastColor = '#000000'
     points.features.slice(1).forEach(function (p, i) {
@@ -145,7 +145,7 @@ export default class Route {
   assignMultiLines(points, lineColors) {
     // MultiLine strings are created per color to reduce amount of layers
     // created. This improves performance A LOT.
-    let multiLines = {} // by color
+    const multiLines = {} // by color
     colorChart.forEach(function (c, i) {
       multiLines[c] = {
         'type': 'Feature',
@@ -177,7 +177,7 @@ export default class Route {
   drawStartEnd(map) {
     map.removeLayer('startEnd')
 
-    let points = {
+    const points = {
       'type': 'FeatureCollection',
       'features': []
     }
@@ -224,15 +224,15 @@ export default class Route {
     map.resetLayers()
     this.drawStartEnd(map)
 
-    let points = this.buildPoints(this.routeSegments[0].points)
-    let sayPoints = this.buildSayPoints(points)
-    let turnPoints = this.buildTurnPoints(points)
-    let lineColors = this.assignLineColors(points)
-    let multiLines = this.assignMultiLines(points, lineColors)
+    const points = this.buildPoints(this.routeSegments[0].points)
+    const sayPoints = this.buildSayPoints(points)
+    const turnPoints = this.buildTurnPoints(points)
+    const lineColors = this.assignLineColors(points)
+    const multiLines = this.assignMultiLines(points, lineColors)
 
     // add lines layers
     for (let color in multiLines) {
-      var line = multiLines[color]
+      let line = multiLines[color]
       map.addLayer({
         'id': 'line-' + color,
         'type': 'line',
@@ -316,10 +316,10 @@ export default class Route {
 
     // Zoom map to the route.
     // https://www.mapbox.com/mapbox-gl-js/example/zoomto-linestring/
-    var coordinates = points.features.map(function (p) {
+    const coordinates = points.features.map(function (p) {
       return p.geometry.coordinates
     })
-    var bounds = coordinates.reduce(function(bounds, coord) {
+    const bounds = coordinates.reduce(function(bounds, coord) {
       return bounds.extend(coord)
     }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
     map.fitBounds(bounds, {
@@ -327,10 +327,10 @@ export default class Route {
     })
 
     // update the summary
-    // let minutes = Math.round(route.duration / 6) / 10 + ' mins'
-    // let miles = Math.round(route.distance / 160.9344) / 10 + ' miles'
+    // const minutes = Math.round(route.duration / 6) / 10 + ' mins'
+    // const miles = Math.round(route.distance / 160.9344) / 10 + ' miles'
     // TODO: remove jquery dependency and extract function
-    // let routeInfo = $('#route-info')
+    // const routeInfo = $('#route-info')
     // routeInfo.find('.server' + (serverID + 1)).show()
     // routeInfo.find('.server' + (serverID + 1) + ' .travel-time').text(minutes)
     // routeInfo.find('.server' + (serverID + 1) + ' .travel-distance').text(miles)

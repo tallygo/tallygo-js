@@ -70,7 +70,7 @@ export default class Map {
   addLayer(layer) {
     // capture data here to eventually store it later; Map.addLayer mutates
     // layer object
-    var data = layer.source.data
+    let data = layer.source.data
 
     if (data.type === 'FeatureCollection') {
       data.features.forEach(function (f, i) {
@@ -104,9 +104,9 @@ export default class Map {
     // when layer is removed the resource associated with it remains
     this.glMap.removeSource(id)
 
-    let i
-    while ((i = this.popupLayers.indexOf(id)) >= 0) {
-      this.popupLayers.splice(i, 1)
+    let index
+    while ((index = this.popupLayers.indexOf(id)) >= 0) {
+      this.popupLayers.splice(index, 1)
     }
   }
 }
