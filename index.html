@@ -17,7 +17,7 @@
         apiToken: "<YOUR API TOKEN>"
       })
       var nav = new mapboxgl.NavigationControl();
-      map.addControl(nav, 'top-left');
+      map.glMap.addControl(nav, 'top-left');
 
       tallyGoKit.loadJSON('spec/fixtures/route.json', function(response) {
         let route = new tallyGoKit.Route(JSON.parse(response))

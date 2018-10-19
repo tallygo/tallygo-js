@@ -1,14 +1,24 @@
 import './mocks/createObjectURL.mock'
+import mapboxgl from 'mapbox-gl'
 import Map from '../src/map'
 
 describe('Map', () => {
-  let map = new Map({
-    container: 'map',
-    apiToken: '22a2db381ba59ca2b4be2d21cea456e7',
-    center: [-95.84, 37.78]
+  beforeAll(() => {
+    document.body.innerHTML = '<div id="map"></div>'
   })
 
-  it('works', () => {
-    expect(map.geojson).toEqual({})
+  beforeEach(() => {
+    mapboxgl.Map.mockClear()
+  })
+
+  const options = {
+    container: 'map', apiToken: 'foo', center: [-95.84, 37.78]
+  }
+
+  it('initializes a mapboxgl.Map', () => {
+    let map = new Map(options)
+
+    expect(mapboxgl.Map).toHaveBeenCalledTimes(1)
+    expect(map.glMap).toBeDefined()
   })
 })
