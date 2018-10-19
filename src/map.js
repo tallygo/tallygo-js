@@ -1,6 +1,6 @@
 // @flow
 
-import * as mapboxgl from 'mapbox-gl'
+import mapboxgl from 'mapbox-gl'
 
 import {
   extend,
@@ -18,12 +18,11 @@ const defaultOptions = {
 }
 
 /**
- * The `Map` object represents the map on your page. It is thin
+ * The `Map` object represents the map on the page. It is thin
  * wrapper around a mapbox-gl js Map object
  *
  * You create a `Map` by specifying a `container` and other options.
  *
- * @extends mapboxgl Map
  * @param {Object} options
  * @param {HTMLElement|string} options.container The HTML element in which the map will be rendered, or the element's string `id`. The specified element must have no children.
  * @param {Object|string} [options.styleHost] The hostname where the style Object spec can be accessed.
@@ -44,24 +43,24 @@ const defaultOptions = {
  * })
  */
 
-export default class Map extends mapboxgl.Map {
+export default class Map {
   constructor(options) {
     options = extend({}, defaultOptions, options)
     options['container'] = getElement(options.container)
     options['style'] = styleUrl(options)
     setHeightStyle(options.container)
 
-    super(options)
+    this.glMap = new mapboxgl.Map(options)
     this.geojson = {}
     this.popupLayers = []
   }
 
   // clear clears all layers and sources added by addLayer
   resetLayers() {
-    // Object.keys(this.geojson).forEach(function (id, i) {
-    //   this.removeLayer(id)
-    //   this.removeSource(id)
-    // })
+    Object.keys(this.geojson).forEach(function (id, i) {
+      this.removeLayer(id)
+      this.removeSource(id)
+    })
     this.geojson = {}
     this.popupLayers = []
   }
@@ -74,18 +73,16 @@ export default class Map extends mapboxgl.Map {
     var data = layer.source.data
 
     if (data.type === 'FeatureCollection') {
-      // data.features.forEach(function (f, i) {
-      //   f.properties.featureIndex = i
-      //   f.properties.layer = layer.id
-      // })
+      data.features.forEach(function (f, i) {
+        f.properties.featureIndex = i
+        f.properties.layer = layer.id
+      })
     }
 
-    if (this.getLayer('startEnd') === undefined) {
-      // TODO: resolve conflict with mapboxgl.Map function with same name
-      // TODO: Otherwise this will result in a recursive call :(
-      this.addLayer(layer)
+    if (this.glMap.getLayer('startEnd') === undefined) {
+      this.glMap.addLayer(layer)
     } else {
-      this.addLayer(layer, 'startEnd')
+      this.glMap.addLayer(layer, 'startEnd')
     }
 
     this.geojson[layer.id] = data
@@ -100,14 +97,12 @@ export default class Map extends mapboxgl.Map {
     }
     delete this.geojson[id]
 
-    if (this.getLayer(id) !== undefined) {
-      // TODO: resolve conflict with mapboxgl.Map function with same name
-      // TODO: Otherwise this will result in a recursive call :(
-      this.removeLayer(id)
+    if (this.glMap.getLayer(id) !== undefined) {
+      this.glMap.removeLayer(id)
     }
 
     // when layer is removed the resource associated with it remains
-    this.removeSource(id)
+    this.glMap.removeSource(id)
 
     let i
     while ((i = this.popupLayers.indexOf(id)) >= 0) {

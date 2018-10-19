@@ -1,5 +1,4 @@
-import * as mapboxgl from 'mapbox-gl'
-
+import mapboxgl from 'mapbox-gl'
 import RouteSegment from './routeSegment'
 
 const colorChart = [
