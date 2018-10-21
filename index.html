@@ -12,16 +12,17 @@
   <body>
     <div id="map"></div>
     <script>
-      var map = new tallyGoKit.Map({
+      let map = new tallyGoKit.Map({
         container: "map",
         apiToken: "<YOUR API TOKEN>"
       })
-      var nav = new mapboxgl.NavigationControl();
+      let nav = new mapboxgl.NavigationControl();
       map.glMap.addControl(nav, 'top-left');
 
       tallyGoKit.loadJSON('spec/fixtures/route.json', function(response) {
         let route = new tallyGoKit.Route(JSON.parse(response))
-        console.log("Here")
+        let routePresenter = new tallyGoKit.RoutePresenter(map, route)
+        routePresenter.draw()
       });
     </script>
   </body>
