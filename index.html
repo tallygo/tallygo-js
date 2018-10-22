@@ -16,14 +16,17 @@
         container: "map",
         apiToken: "<YOUR API TOKEN>"
       })
-      let nav = new mapboxgl.NavigationControl();
-      map.glMap.addControl(nav, 'top-left');
+      let nav = new mapboxgl.NavigationControl()
+      map.glMap.addControl(nav, 'top-left')
 
-      tallyGoKit.loadJSON('spec/fixtures/route.json', function(response) {
-        let route = new tallyGoKit.Route(JSON.parse(response))
-        let routePresenter = new tallyGoKit.RoutePresenter(map, route)
-        routePresenter.draw()
-      });
+      map.glMap.on('load', function() {
+        let glMap = this
+        tallyGoKit.loadJSON('spec/fixtures/route.json', function(response) {
+          let route = new tallyGoKit.Route(JSON.parse(response))
+          let routePresenter = new tallyGoKit.RoutePresenter(glMap, route)
+          routePresenter.draw()
+        })
+      })
     </script>
   </body>
 </html>
