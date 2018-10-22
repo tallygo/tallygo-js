@@ -10,7 +10,7 @@ const colorChart = [
 
 export default class RoutePresenter {
   constructor(map, route) {
-    this.map = map.glMap
+    this.map = map
     this.route = route
     this.geojson = {}
     this.popupLayers = []
@@ -240,7 +240,7 @@ export default class RoutePresenter {
     this.resetLayers()
     this.drawStartEnd()
 
-    const points = this.buildPoints(this.route.routeSegments[0].points)
+    const points = this.buildPoints(this.route.firstSegment.points)
     const sayPoints = this.buildSayPoints(points)
     const turnPoints = this.buildTurnPoints(points)
     const lineColors = this.assignLineColors(points)
