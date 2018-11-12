@@ -9,9 +9,8 @@ const colorChart = [
 ]
 
 export default class RoutePresenter {
-  constructor(map, route) {
+  constructor(map) {
     this.map = map
-    this.route = route
     this.geojson = {}
     this.popupLayers = []
   }
@@ -26,6 +25,8 @@ export default class RoutePresenter {
   }
 
   removeLayer(id) {
+    // Mapboxgl.Map used
+    //
     if (!this.geojson.hasOwnProperty(id)) { return }
     delete this.geojson[id]
 
@@ -43,6 +44,8 @@ export default class RoutePresenter {
   // addLayer adds layer and registers its ID, which is then used by
   // resetLayers. It assumes that layer's source data is of type geojson.
   addLayer(layer) {
+    // Mapboxgl.Map used
+    //
     // capture data here to eventually store it later; Map.addLayer mutates
     // layer object
     let data = layer.source.data
@@ -66,7 +69,7 @@ export default class RoutePresenter {
     }
   }
 
-  drawStartEnd() {
+  drawStartEnd(route) {
     this.removeLayer('startEnd')
 
     const points = {
@@ -78,7 +81,7 @@ export default class RoutePresenter {
       'type': 'Feature',
       'geometry': {
         'type': 'Point',
-        'coordinates': this.route.startLonLat()
+        'coordinates': route.startLonLat()
       },
       'properties': {
         'icon': 'marker-green',
@@ -90,7 +93,7 @@ export default class RoutePresenter {
       'type': 'Feature',
       'geometry': {
         'type': 'Point',
-        'coordinates': this.route.endLonLat()
+        'coordinates': route.endLonLat()
       },
       'properties': {
         'icon': 'marker-red',
@@ -112,10 +115,12 @@ export default class RoutePresenter {
     })
   }
 
-  buildPoints() {
+  buildPoints(route) {
+    // TallygoRoute used
+    //
     return {
       'type': 'FeatureCollection',
-      'features': this.route.firstSegment.points.map(function (d, i) {
+      'features': route.firstSegment.points.map(function (d, i) {
         // bearing; not available for the last point
         // TODO: replace google.maps functions
         // let bearing
@@ -236,11 +241,14 @@ export default class RoutePresenter {
     return multiLines
   }
 
-  draw() {
+  _draw(route) {
+    // Mapboxgl.Map used
+    // TallygoRoute used
+    //
     this.resetLayers()
-    this.drawStartEnd()
+    this.drawStartEnd(route)
 
-    const points = this.buildPoints(this.route.firstSegment.points)
+    const points = this.buildPoints(route)
     const sayPoints = this.buildSayPoints(points)
     const turnPoints = this.buildTurnPoints(points)
     const lineColors = this.assignLineColors(points)
@@ -327,17 +335,7 @@ export default class RoutePresenter {
       }
     })
 
-    // Zoom map to the route.
-    // https://www.mapbox.com/mapbox-gl-js/example/zoomto-linestring/
-    const coordinates = points.features.map(function (p) {
-      return p.geometry.coordinates
-    })
-    const bounds = coordinates.reduce(function(bounds, coord) {
-      return bounds.extend(coord)
-    }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]))
-    this.map.fitBounds(bounds, {
-      padding: 20
-    })
+    this.zoom(points)
 
     // update the summary
     // const minutes = Math.round(route.duration / 6) / 10 + ' mins'
@@ -347,5 +345,23 @@ export default class RoutePresenter {
     // routeInfo.find('.server' + (serverID + 1)).show()
     // routeInfo.find('.server' + (serverID + 1) + ' .travel-time').text(minutes)
     // routeInfo.find('.server' + (serverID + 1) + ' .travel-distance').text(miles)
+  }
+
+  zoom(points) {
+    // Zoom map to the route.
+    // https://www.mapbox.com/mapbox-gl-js/example/zoomto-linestring/
+    const coordinates = points.features.map(
+      (p) => { return p.geometry.coordinates }
+    )
+    const bounds = coordinates.reduce(
+      (bounds, coord) => { return bounds.extend(coord) },
+      new mapboxgl.LngLatBounds(coordinates[0], coordinates[0])
+    )
+
+    this.map.fitBounds(bounds, {padding: 20})
+  }
+
+  draw(route) {
+    this._draw(route)
   }
 }

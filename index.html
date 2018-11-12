@@ -3,30 +3,47 @@
   <head>
     <meta charset="utf-8">
     <title>TallyGo Map</title>
-    <meta name="description" content="TallGo Map">
+    <meta name="description" content="TallyGo Map">
     <meta name="author" content="TallyGo">
     <script src="node_modules/mapbox-gl/dist/mapbox-gl-dev.js"></script>
     <link rel="stylesheet" media="screen" href="node_modules/mapbox-gl/dist/mapbox-gl.css" />
     <script src="dist/browser.js"></script>
   </head>
   <body>
-    <div id="map"></div>
+    <div id="tallygo-map"></div>
     <script>
-      let map = new tallyGoKit.Map({
-        container: "map",
-        apiToken: "22a2db381ba59ca2b4be2d21cea456e7"
+      const tallygo = TallyGo.configure({
+        apiToken: '22a2db381ba59ca2b4be2d21cea456e7',
+        map: { navPosition: 'top-left' },
+        request: { apiUrl: 'https://api.tallygo.com/v1/route' }
       })
-      let nav = new mapboxgl.NavigationControl()
-      map.glMap.addControl(nav, 'top-left')
 
-      map.glMap.on('load', function() {
-        let glMap = this
-        tallyGoKit.loadJSON('spec/fixtures/route.json', function(response) {
-          let route = new tallyGoKit.Route(JSON.parse(response))
-          let routePresenter = new tallyGoKit.RoutePresenter(glMap, route)
-          routePresenter.draw()
-        })
-      })
+      const requestOptions = {
+        startPoint: [34.76151710977818, -112.0571484988772],
+        endPoint: [34.76260434283671, -112.01666952034871],
+        time: '2018-11-13T01:31:51-0800',
+        course: 0,
+        speed: 0,
+        requestType: 'DepartureTime',
+        minimizeDifficultLeftTurns: 'false',
+        useCarpoolLanes: 'false',
+        useExpressLanes: 'false',
+        staticWeights: 'false'
+      }
+
+      tallygo.request.get(requestOptions).then(
+        function(json) {
+          tallygo.map.draw(
+            [tallygo.newRoute(json)]
+          )
+        }
+      )
+
+      // TallyGo.loadJSON('spec/fixtures/route.json', function(rawData) {
+      //   tallygo.map.draw([
+      //     tallygo.newRoute(JSON.parse(rawData))
+      //   ])
+      // })
     </script>
   </body>
 </html>

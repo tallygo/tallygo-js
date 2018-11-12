@@ -4,8 +4,9 @@
  * The last source object given overrides properties from previous
  * source objects.
  *
- * @param dest destination object
- * @param sources sources from which properties are pulled
+ * @param {Object} dest destination object
+ * @param {Array|Object} sources objects with properties that will be added to destination object
+ * @return {Object} destination object
  * @private
  */
 export function extend(dest, ...sources) {

@@ -1,5 +1,11 @@
 import RouteSegment from './routeSegment'
 
+/**
+ * The `Route` object wraps the `Request` response JSON
+ *
+ * @param {Object} data JSON blob containing one or more sequences of points
+ * @returns {Route} route object
+ */
 export default class Route {
   constructor(data) {
     this.duration = data.duration
