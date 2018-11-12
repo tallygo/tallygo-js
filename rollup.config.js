@@ -1,6 +1,7 @@
+import json from 'rollup-plugin-json'
+import commonjs from 'rollup-plugin-commonjs'
 import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
 import uglify from 'rollup-plugin-uglify'
 import flowRemoveTypes from '@mapbox/flow-remove-types';
 import pkg from './package.json'
@@ -26,14 +27,19 @@ export default [
     external: ['mapbox-gl'],
     output: {
       globals: {'mapbox-gl': 'mapboxgl'},
-      name: 'tallyGoKit',
+      name: 'TallyGo',
       file: pkg.browser,
       format: 'umd',
       sourcemap: production ? true : 'inline'
     },
     plugins: [
+      json({
+        exclude: [ 'node_modules/**' ]
+      }),
       flow(),
-      babel(),
+      babel({
+        exclude: ['node_modules/**', '*.json']
+      }),
       resolve(),
       commonjs(),
       production ? uglify() : false
@@ -47,6 +53,11 @@ export default [
       { file: pkg.main, format: 'cjs' },
       // bundler friendly module build
       { file: pkg.module, format: 'es' }
+    ],
+    plugins: [
+      json({
+        exclude: [ 'node_modules/**' ]
+      })
     ]
   }
 ].filter(Boolean)

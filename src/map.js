@@ -1,21 +1,14 @@
 // @flow
+/* eslint valid-jsdoc: ["error", { "requireParamDescription": false }] */
 
 import mapboxgl from 'mapbox-gl'
+import RoutePresenter from './routePresenter'
 
 import {
-  extend,
   getElement,
   setHeightStyle,
   styleUrl
 } from './utils'
-
-const defaultOptions = {
-  center: [-95.84, 37.78],
-  hash: true,
-  styleHost: 'maptiles-stg.tallygo.com',
-  traffic: 0,
-  zoom: 4
-}
 
 /**
  * The `Map` object represents the map on the page. It is thin
@@ -33,23 +26,41 @@ const defaultOptions = {
  * @param {number} [options.zoom=0] The initial zoom level of the map. If `zoom` is not specified in the constructor options, Mapbox GL JS will look for it in the map's style object. If it is not specified in the style, either, it will default to `0`.
  *
  * @example
- * var map = new tallyGoKit.Map({
+ * var map = new TallyGo.Map({
  *   container: 'map',
  *   center: [-95.84, 37.78],
  *   hash: true,
- *   styleHost: 'maptiles-stg.tallygo.com',
+ *   styleHost: 'maptiles.tallygo.com',
  *   traffic: 0,
  *   zoom: 4
  * })
  */
-
 export default class Map {
   constructor(options) {
-    options = extend({}, defaultOptions, options)
     options['container'] = getElement(options.container)
     options['style'] = styleUrl(options)
     setHeightStyle(options.container)
 
     this.glMap = new mapboxgl.Map(options)
+    if (options.navPosition !== undefined) {
+      let nav = new mapboxgl.NavigationControl()
+      this.glMap.addControl(nav, options.navPosition)
+    }
+    this.routePresenter = new RoutePresenter(this.glMap)
+  }
+
+  /**
+   * Draws routes on this map.
+   * Waits for the mapboxgl.Map 'load' event to fire.
+   *
+   * @param {Array} routes sequence of Route objects: [Route]
+   * @returns {Map} this
+   */
+  draw(routes) {
+    let routePresenter = this.routePresenter
+    this.glMap.on('load', function() {
+      routePresenter.draw(routes[0])
+    })
+    return this
   }
 }
