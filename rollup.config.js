@@ -1,4 +1,4 @@
-import buble from 'rollup-plugin-buble'
+import babel from 'rollup-plugin-babel'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import uglify from 'rollup-plugin-uglify'
@@ -33,7 +33,7 @@ export default [
     },
     plugins: [
       flow(),
-      buble({transforms: {dangerousForOf: true}, objectAssign: "Object.assign"}),
+      babel(),
       resolve(),
       commonjs(),
       production ? uglify() : false
