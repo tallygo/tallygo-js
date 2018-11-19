@@ -31,19 +31,19 @@
         staticWeights: 'false'
       }
 
-      tallygo.request.get(requestOptions).then(
-        function(json) {
-          tallygo.map.draw(
-            [tallygo.newRoute(json)]
-          )
-        }
-      )
+      // tallygo.request.get(requestOptions).then(
+      //   function(json) {
+      //     tallygo.map.draw(
+      //       [tallygo.newRoute(json)]
+      //     )
+      //   }
+      // )
 
-      // TallyGo.loadJSON('spec/fixtures/route.json', function(rawData) {
-      //   tallygo.map.draw([
-      //     tallygo.newRoute(JSON.parse(rawData))
-      //   ])
-      // })
+      TallyGo.loadJSON('spec/fixtures/route.json', function(rawData) {
+        tallygo.map.draw([
+          tallygo.newRoute(JSON.parse(rawData))
+        ])
+      })
     </script>
   </body>
 </html>

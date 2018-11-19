@@ -38,7 +38,9 @@
     "st": "^1.2.2"
   },
   "dependencies": {
-    "mapbox-gl": "^0.50.0"
+    "isomorphic-ws": "^4.0.1",
+    "mapbox-gl": "^0.50.0",
+    "ws": "^6.1.2"
   },
   "scripts": {
     "build:dev": "rollup -c --environment BUILD:dev",

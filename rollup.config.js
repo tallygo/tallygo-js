@@ -24,9 +24,12 @@ export default [
   // browser-friendly umd build
   {
     input: 'src/index.js',
-    external: ['mapbox-gl'],
+    external: ['mapbox-gl', 'isomorphic-ws'],
     output: {
-      globals: {'mapbox-gl': 'mapboxgl'},
+      globals: {
+        'mapbox-gl': 'mapboxgl',
+        'isomorphic-ws': 'WebSocket'
+      },
       name: 'TallyGo',
       file: pkg.browser,
       format: 'umd',
@@ -47,7 +50,7 @@ export default [
   },
   {
     input: 'src/index.js',
-    external: ['mapbox-gl'],
+    external: ['mapbox-gl', 'isomorphic-ws', 'ws'],
     output: [
       // node friendly commonjs build
       { file: pkg.main, format: 'cjs' },
