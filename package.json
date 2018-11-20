@@ -38,6 +38,10 @@
     "st": "^1.2.2"
   },
   "dependencies": {
+    "@turf/along": "^6.0.1",
+    "@turf/bearing": "^6.0.1",
+    "@turf/distance": "^6.0.1",
+    "@turf/point-to-line-distance": "^6.0.0",
     "isomorphic-ws": "^4.0.1",
     "mapbox-gl": "^0.50.0",
     "ws": "^6.1.2"

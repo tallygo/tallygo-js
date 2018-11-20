@@ -32,7 +32,7 @@ export default [
       },
       name: 'TallyGo',
       file: pkg.browser,
-      format: 'umd',
+      format: 'iife',
       sourcemap: production ? true : 'inline'
     },
     plugins: [
@@ -50,7 +50,15 @@ export default [
   },
   {
     input: 'src/index.js',
-    external: ['mapbox-gl', 'isomorphic-ws', 'ws'],
+    external: [
+      'mapbox-gl',
+      'isomorphic-ws',
+      'ws',
+      '@turf/helpers',
+      '@turf/along',
+      '@turf/bearing',
+      '@turf/distance'
+    ],
     output: [
       // node friendly commonjs build
       { file: pkg.main, format: 'cjs' },
@@ -58,8 +66,11 @@ export default [
       { file: pkg.module, format: 'es' }
     ],
     plugins: [
+      resolve({
+        customResolveOptions: { moduleDirectory: 'node_modules' }
+      }),
       json({
-        exclude: [ 'node_modules/**' ]
+        exclude: ['node_modules/**']
       })
     ]
   }
