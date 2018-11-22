@@ -2,7 +2,7 @@
 /* eslint valid-jsdoc: ["error", { "requireParamDescription": false }] */
 
 import mapboxgl from 'mapbox-gl'
-import RoutePresenter from './routePresenter'
+import LayerCollection from './layerCollection'
 
 import {
   getElement,
@@ -46,20 +46,79 @@ export default class Map {
       let nav = new mapboxgl.NavigationControl()
       this.glMap.addControl(nav, options.navPosition)
     }
-    this.routePresenter = new RoutePresenter(this.glMap)
+    this.geojson = {}
+  }
+
+  resetLayers() {
+    Object.keys(this.geojson).forEach(function (id, i) {
+      this.removeLayer(id)
+      this.removeSource(id)
+    })
+    this.geojson = {}
+  }
+
+  removeLayer(id) {
+    if (!this.geojson.hasOwnProperty(id)) { return }
+    delete this.geojson[id]
+
+    if (this.glMap.getLayer(id) !== undefined) { this.glMap.removeLayer(id) }
+
+    // Remove the resource associated with the layer.
+    this.glMap.removeSource(id)
+  }
+
+  addLayer(layer) {
+    // addLayer adds layer and registers its ID, which is then used by
+    // resetLayers. It assumes that layer's source data is of type geojson.
+    // capture data here to eventually store it later; Map.addLayer mutates
+    // layer object
+    let data = layer.source.data
+
+    if (data.type === 'FeatureCollection') {
+      data.features.forEach(function (f, i) {
+        f.properties.featureIndex = i
+        f.properties.layer = layer.id
+      })
+    }
+
+    if (this.glMap.getLayer('startEnd') === undefined) {
+      this.glMap.addLayer(layer)
+    } else {
+      this.glMap.addLayer(layer, 'startEnd')
+    }
+
+    this.geojson[layer.id] = data
+  }
+
+  boundsFor(coordinates) {
+    return coordinates.reduce(
+      (bounds, coord) => { return bounds.extend(coord) },
+      new mapboxgl.LngLatBounds(coordinates[0], coordinates[0])
+    )
+  }
+
+  zoom(coordinates) {
+    this.glMap.fitBounds(
+      this.boundsFor(coordinates), {padding: 20}
+    )
   }
 
   /**
-   * Draws routes on this map.
+   * Draw routes on this map.
    * Waits for the mapboxgl.Map 'load' event to fire.
    *
    * @param {Array} routes sequence of Route objects: [Route]
    * @returns {Map} this
    */
   draw(routes) {
-    let routePresenter = this.routePresenter
+    this.resetLayers()
+    let route = routes[0]
+    let self = this
+    let layers = new LayerCollection(route)
+
     this.glMap.on('load', function() {
-      routePresenter.draw(routes[0])
+      layers.forEach((layer) => { self.addLayer(layer) })
+      self.zoom(route.coordinates())
     })
     return this
   }
