@@ -30,4 +30,11 @@ const permittedParams = {
   minimizeDifficultLeftTurns: 'boolean'
 }
 
-export { MAP_DEFAULTS, REQUEST_DEFAULTS, permittedParams }
+const colorChart = [
+  '#000000', '#cc0000',
+  '#ff0000', '#ff8800',
+  '#dddd00', '#B2EE0D',
+  '#00ff00', '#00ff00',
+  '#33FFCC'
+]
+export { MAP_DEFAULTS, REQUEST_DEFAULTS, colorChart, permittedParams }

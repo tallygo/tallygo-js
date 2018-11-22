@@ -1,12 +1,5 @@
 import mapboxgl from 'mapbox-gl'
-
-const colorChart = [
-  '#000000', '#cc0000',
-  '#ff0000', '#ff8800',
-  '#dddd00', '#B2EE0D',
-  '#00ff00', '#00ff00',
-  '#33FFCC'
-]
+import LayerCollection from './layerCollection'
 
 export default class RoutePresenter {
   constructor(map) {
@@ -115,132 +108,6 @@ export default class RoutePresenter {
     })
   }
 
-  buildPoints(route) {
-    // TallygoRoute used
-    //
-    return {
-      'type': 'FeatureCollection',
-      'features': route.firstSegment.points.map(function (d, i) {
-        // bearing; not available for the last point
-        // TODO: replace google.maps functions
-        // let bearing
-        // if (i + 1 < firstSegPoints.length) {
-        //   let curr = new google.maps.LatLng(d.lat, d.lon)
-        //   let next = firstSegPoints[i + 1]
-        //   next = new google.maps.LatLng(next.lat, next.lon)
-        //   bearing = google.maps.geometry.spherical.computeHeading(curr, next)
-        //   bearing = Math.round(360.0 + bearing) % 360
-        // }
-
-        let locationHTML = '@ ' + d.lat + ',' + d.lon // + ' Bearing: ' + bearing + '°'
-        if (d.edge) {
-          locationHTML += ' Way: ' + d.edge
-        }
-        if (d.node) {
-          locationHTML += ' Node: ' + d.node
-        }
-
-        // let streetViewUrl = 'https://maps.googleapis.com/maps/api/streetview?key=AIzaSyC9AjQpIuwBbCbKWbySueWK6XqX5_F57u0&size=640x480&location=' + d.lat + ',' + d.lon + '&heading=' + bearing
-        // let popupHTML = '<img src=' + streetViewUrl + ' id="street-view-image"  width="640" height="480" referrerpolicy="no-referrer" />'
-        // popupHTML += locationHTML
-
-        return {
-          'type': 'Feature',
-          'geometry': {
-            'type': 'Point',
-            'coordinates': [d.lon, d.lat]
-          },
-          'properties': {
-            'pointFeatureIndex': i,
-            'icon': 'veterinary',
-            'node': d.node,
-            'edge': d.edge,
-            // 'bearing': bearing,
-            'say': d.say,
-            'turn': d.turn,
-            'kilometers': parseInt(d.d),
-            'seconds': parseInt(d.t),
-            // 'popupHTML': popupHTML,
-            'hoverHTML': locationHTML
-          }
-        }
-      })
-    }
-  }
-
-  buildSayPoints(points) {
-    return {
-      'type': 'FeatureCollection',
-      'features': points.features.reduce(function (acc, f) {
-        if (!f.properties.say) { return acc }
-        // f.properties.popupHTML += '<br>Say: ' + f.properties.say
-        f.properties.hoverHTML += '<br>Say: ' + f.properties.say
-        acc.push(f)
-        return acc
-      }, [])
-    }
-  }
-
-  buildTurnPoints(points) {
-    return {
-      'type': 'FeatureCollection',
-      'features': points.features.reduce(function (acc, f) {
-        if (!f.properties.turn) { return acc }
-        let html = '<br>Turn:<pre>' + JSON.stringify(f.properties.turn, null, 4) + '</pre>'
-        // f.properties.popupHTML += html
-        f.properties.hoverHTML += html
-        acc.push(f)
-        return acc
-      }, [])
-    }
-  }
-
-  assignLineColors(points) {
-    let lastColor = '#000000'
-    return points.features.slice(1).map(function (p, i) {
-      if (p.kilometers !== 0 && p.seconds !== 0) {
-        let miles = p.properties.kilometers / 1609.34
-        let hours = p.properties.seconds / 3600
-        let mph = miles / hours
-        lastColor = colorChart[Math.min(colorChart.length - 1, Math.round(mph / 10))]
-        if (lastColor === undefined) lastColor = '#000000'
-      }
-      return lastColor
-    })
-  }
-
-  assignMultiLines(points, lineColors) {
-    // MultiLine strings are created per color to reduce amount of layers
-    // created. This improves performance A LOT.
-    const multiLines = {} // by color
-    colorChart.forEach(function (c, i) {
-      multiLines[c] = {
-        'type': 'Feature',
-        'geometry': {
-          'type': 'MultiLineString',
-          'coordinates': []
-        },
-        'properties': {
-          'color': c
-        }
-      }
-    })
-
-    let coords = [points.features[0].geometry.coordinates]
-    let lastColor = lineColors[0]
-    points.features.slice(1).forEach(function (p, i) {
-      coords.push(p.geometry.coordinates)
-      var currColor = lineColors[i + 1]
-      if (lastColor !== currColor) {
-        multiLines[lastColor].geometry.coordinates.push(coords)
-        coords = [p.geometry.coordinates]
-      }
-      lastColor = currColor
-    })
-
-    return multiLines
-  }
-
   _draw(route) {
     // Mapboxgl.Map used
     // TallygoRoute used
@@ -248,15 +115,11 @@ export default class RoutePresenter {
     this.resetLayers()
     this.drawStartEnd(route)
 
-    const points = this.buildPoints(route)
-    const sayPoints = this.buildSayPoints(points)
-    const turnPoints = this.buildTurnPoints(points)
-    const lineColors = this.assignLineColors(points)
-    const multiLines = this.assignMultiLines(points, lineColors)
+    const layerCollection = new LayerCollection(route)
 
     // add lines layers
-    for (let color in multiLines) {
-      let line = multiLines[color]
+    for (let color in layerCollection.multiLines) {
+      let line = layerCollection.multiLines[color]
       this.addLayer({
         'id': 'line-' + color,
         'type': 'line',
@@ -280,7 +143,7 @@ export default class RoutePresenter {
       'type': 'circle',
       'source': {
         'type': 'geojson',
-        'data': points
+        'data': layerCollection.points
       },
       'layout': {},
       'paint': {
@@ -299,7 +162,7 @@ export default class RoutePresenter {
       'type': 'symbol',
       'source': {
         'type': 'geojson',
-        'data': sayPoints
+        'data': layerCollection.sayPoints
       },
       'layout': {
         'icon-image': 'speech',
@@ -320,7 +183,7 @@ export default class RoutePresenter {
       'type': 'symbol',
       'source': {
         'type': 'geojson',
-        'data': turnPoints
+        'data': layerCollection.turnPoints
       },
       'layout': {
         'icon-image': 'marker-blue',
@@ -335,7 +198,7 @@ export default class RoutePresenter {
       }
     })
 
-    this.zoom(points)
+    this.zoom(layerCollection.points)
 
     // update the summary
     // const minutes = Math.round(route.duration / 6) / 10 + ' mins'
