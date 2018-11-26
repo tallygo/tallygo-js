@@ -2,6 +2,7 @@
 
 import { version } from '../package.json'
 import Map from './map'
+import PointBuffer from './pointBuffer'
 import Request from './request'
 import Route from './route'
 import WebSocket from './wsClient'
@@ -10,7 +11,7 @@ import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
 import { point } from '@turf/helpers'
 import along from '@turf/along'
 import bearing from '@turf/bearing'
-import length from '@turf/length'
+import distance from '@turf/distance'
 
 /**
  * The `configure` function is used to set the TallyGo Api Token
@@ -52,11 +53,11 @@ function configure (options) {
 }
 
 const turf = {
-  lineDistance: (geojson, options) => length(geojson, options),
+  distance: (from, to, options) => distance(from, to, options),
   along: (line, distance, options) => along(line, distance, options),
   bearing: (start, end, options) => bearing(start, end, options),
   point: (coordinates, properties, options) => point(coordinates, properties, options)
 }
 
-const exported = { configure, loadJSON, Map, Request, WebSocket, turf }
+const exported = { configure, loadJSON, Map, PointBuffer, Request, WebSocket, turf }
 export default exported
