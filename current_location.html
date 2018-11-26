@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TallyGo Current location animation</title>
+    <meta name="description" content="TallyGo Current Location animation">
+    <meta name="author" content="TallyGo">
+    <script src="node_modules/mapbox-gl/dist/mapbox-gl-dev.js"></script>
+    <link rel="stylesheet" media="screen" href="node_modules/mapbox-gl/dist/mapbox-gl.css" />
+    <script src="dist/browser.js"></script>
+  </head>
+  <body>
+    <div id="tallygo-map"></div>
+    <script>
+      const tallygo = TallyGo.configure({
+        apiToken: '22a2db381ba59ca2b4be2d21cea456e7',
+        map: {
+          navPosition: 'top-left',
+          center: [-118.37375, 34.08047],
+          zoom: 13
+        },
+        request: { apiUrl: 'https://api.tallygo.com/v1/route' }
+      })
+
+      let map = tallygo.map.glMap
+
+      function initPoint(coordinates, map) {
+        let _point = {
+          "type": "FeatureCollection",
+          "features": [{
+            "type": "Feature",
+            "properties": {},
+            "geometry": {
+              "type": "Point",
+              "coordinates": coordinates
+            }
+          }]
+        }
+        map.addSource('point', {
+          "type": "geojson",
+          "data": _point
+        })
+        map.addLayer({
+            "id": "point",
+            "source": "point",
+            "type": "symbol",
+            "layout": {
+                "icon-image": "airport-15",
+                "icon-rotate": ["get", "bearing"],
+                "icon-rotation-alignment": "map",
+                "icon-allow-overlap": true,
+                "icon-ignore-placement": true
+            }
+        })
+        return _point
+      }
+
+      map.on('load', function () {
+
+        const ws = new TallyGo.WebSocket('ws://localhost:3200')
+        let buffer = new TallyGo.PointBuffer(0.25)
+        let counter = 0
+        let point = null
+
+        function animate() {
+          // Update point geometry to a new position based on counter
+
+          let coordinates = buffer[counter]
+          let coordinates2 = buffer[counter +1]
+          point.features[0].geometry.coordinates = coordinates
+
+          // Calculate the bearing to ensure the icon is rotated to match the route arc
+          // The bearing is calculate between the current point and the next point, except
+          // at the end of the arc use the previous point and the current point
+          point.features[0].properties.bearing = TallyGo.turf.bearing(
+            TallyGo.turf.point(coordinates),
+            TallyGo.turf.point(coordinates2)
+          );
+
+          // Update the source with this new data.
+          map.getSource('point').setData(point);
+
+          // Request the next frame of animation so long the end has not been reached.
+          if((counter + 3) < (buffer.length)) {
+            requestAnimationFrame(animate)
+          }
+
+          counter = counter + 1;
+        }
+
+        ws.onopen = function() {
+          console.log("socket is open");
+        }
+        ws.onmessage = function (evt) {
+          var received_msg = JSON.parse(evt.data)
+
+          buffer.add([received_msg.payload.longitude, received_msg.payload.latitude])
+
+          if (point === null) { point = initPoint(buffer[0], map) }
+
+          if (buffer.length > 2) { animate(counter) }
+        }
+        ws.onclose = function() {
+          console.log("Connection is closed...")
+        }
+      })
+    </script>
+  </body>
+</html>
