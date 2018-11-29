@@ -97,9 +97,9 @@ export default class Map {
     )
   }
 
-  zoom(coordinates) {
+  zoom(coordinates, options) {
     this.glMap.fitBounds(
-      this.boundsFor(coordinates), {padding: 20}
+      this.boundsFor(coordinates), options
     )
   }
 
@@ -118,7 +118,7 @@ export default class Map {
 
     this.glMap.on('load', function() {
       layers.forEach((layer) => { self.addLayer(layer) })
-      self.zoom(route.coordinates())
+      self.zoom(route.coordinates(), {padding: 20})
     })
     return this
   }
