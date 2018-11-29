@@ -2,7 +2,7 @@
 
 import { version } from '../package.json'
 import Map from './map'
-import PointBuffer from './pointBuffer'
+import AnimationBuffer from './animationBuffer'
 import Request from './request'
 import Route from './route'
 import WebSocket from './wsClient'
@@ -59,5 +59,5 @@ const turf = {
   point: (coordinates, properties, options) => point(coordinates, properties, options)
 }
 
-const exported = { configure, loadJSON, Map, PointBuffer, Request, WebSocket, turf }
+const exported = { configure, loadJSON, Map, AnimationBuffer, Request, WebSocket, turf }
 export default exported
