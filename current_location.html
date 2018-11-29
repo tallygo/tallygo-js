@@ -14,17 +14,14 @@
     <script>
       const tallygo = TallyGo.configure({
         apiToken: '22a2db381ba59ca2b4be2d21cea456e7',
-        map: {
-          navPosition: 'top-left',
-          center: [-118.37375, 34.08047],
-          zoom: 13
-        },
+        map: { navPosition: 'top-left' },
+        // TODO: Remove the need to set the request apiUrl if it isn't used
         request: { apiUrl: 'https://api.tallygo.com/v1/route' }
       })
 
       let map = tallygo.map.glMap
 
-      function initPoint(coordinates, map) {
+      function initPoint(map) {
         let _point = {
           "type": "FeatureCollection",
           "features": [{
@@ -32,60 +29,74 @@
             "properties": {},
             "geometry": {
               "type": "Point",
-              "coordinates": coordinates
+              "coordinates": [0, 0] // Place off screen initially
             }
           }]
         }
+
         map.addSource('point', {
           "type": "geojson",
           "data": _point
         })
         map.addLayer({
-            "id": "point",
-            "source": "point",
-            "type": "symbol",
-            "layout": {
-                "icon-image": "airport-15",
-                "icon-rotate": ["get", "bearing"],
-                "icon-rotation-alignment": "map",
-                "icon-allow-overlap": true,
-                "icon-ignore-placement": true
-            }
+          "id": "point",
+          "source": "point",
+          "type": "symbol",
+          "layout": {
+            "icon-image": "car-taxi",
+            "icon-rotate": ["get", "bearing"],
+            "icon-rotation-alignment": "map",
+            "icon-allow-overlap": true,
+            "icon-ignore-placement": true
+          }
         })
         return _point
       }
 
+      function flyToOptions(zoom, coordinates) {
+        if (zoom <= 5) {
+          return {
+            center: coordinates,
+            zoom: 15,
+            speed: 1
+          }
+        }
+        return {
+          center: coordinates,
+          zoom: zoom,
+          speed: 0.2
+        }
+      }
+
       map.on('load', function () {
+        map.loadImage('images/car-taxi.png', function(error, image) {
+          if (error) throw error;
+          map.addImage('car-taxi', image);
+        })
 
         const ws = new TallyGo.WebSocket('ws://localhost:3200')
-        let buffer = new TallyGo.PointBuffer(0.25)
-        let counter = 0
-        let point = null
+        let animationBuffer = new TallyGo.AnimationBuffer(700)
+        let point = initPoint(map)
 
         function animate() {
-          // Update point geometry to a new position based on counter
-
-          let coordinates = buffer[counter]
-          let coordinates2 = buffer[counter +1]
-          point.features[0].geometry.coordinates = coordinates
-
-          // Calculate the bearing to ensure the icon is rotated to match the route arc
-          // The bearing is calculate between the current point and the next point, except
-          // at the end of the arc use the previous point and the current point
+          point.features[0].geometry.coordinates = animationBuffer.current()
           point.features[0].properties.bearing = TallyGo.turf.bearing(
-            TallyGo.turf.point(coordinates),
-            TallyGo.turf.point(coordinates2)
+            TallyGo.turf.point(animationBuffer.current()),
+            TallyGo.turf.point(animationBuffer.next())
           );
 
-          // Update the source with this new data.
+          // Update the map with this new data.
           map.getSource('point').setData(point);
 
-          // Request the next frame of animation so long the end has not been reached.
-          if((counter + 3) < (buffer.length)) {
+          if (animationBuffer.continue()) {
+            // Request the next frame of animation unless we are approaching
+            // the end of the buffer.
             requestAnimationFrame(animate)
+            animationBuffer.advance()
+          } else {
+            // Remove all the coordinates that have already been animated.
+            animationBuffer.truncate()
           }
-
-          counter = counter + 1;
         }
 
         ws.onopen = function() {
@@ -93,12 +104,20 @@
         }
         ws.onmessage = function (evt) {
           var received_msg = JSON.parse(evt.data)
+          var coordinates = [
+            received_msg.payload.longitude,
+            received_msg.payload.latitude
+          ]
 
-          buffer.add([received_msg.payload.longitude, received_msg.payload.latitude])
+          map.flyTo(
+            flyToOptions(map.getZoom(), coordinates)
+          )
 
-          if (point === null) { point = initPoint(buffer[0], map) }
+          animationBuffer.add(coordinates)
 
-          if (buffer.length > 2) { animate(counter) }
+          if (animationBuffer.length > 2) {
+            animate()
+          }
         }
         ws.onclose = function() {
           console.log("Connection is closed...")
