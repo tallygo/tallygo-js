@@ -1,17 +1,15 @@
 // @flow
 
+import WebSocket from 'isomorphic-ws'
+import bearing from '@turf/bearing'
+import { point } from '@turf/helpers'
 import { version } from '../package.json'
 import Map from './map'
 import AnimationBuffer from './animationBuffer'
 import Request from './request'
 import Route from './route'
-import WebSocket from './wsClient'
 import { loadJSON, extend } from './utils'
 import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
-import { point } from '@turf/helpers'
-import along from '@turf/along'
-import bearing from '@turf/bearing'
-import distance from '@turf/distance'
 
 /**
  * The `configure` function is used to set the TallyGo Api Token
@@ -53,8 +51,6 @@ function configure (options) {
 }
 
 const turf = {
-  distance: (from, to, options) => distance(from, to, options),
-  along: (line, distance, options) => along(line, distance, options),
   bearing: (start, end, options) => bearing(start, end, options),
   point: (coordinates, properties, options) => point(coordinates, properties, options)
 }

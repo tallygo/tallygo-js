@@ -2,7 +2,7 @@ const MAP_DEFAULTS = {
   center: [-95.84, 37.78],
   container: 'tallygo-map',
   hash: true,
-  styleHost: 'maptiles-stg.tallygo.com',
+  styleHost: 'maptiles.tallygo.com',
   traffic: 0,
   zoom: 4
 }
