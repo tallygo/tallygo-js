@@ -8,6 +8,13 @@ export default class AnimationBuffer extends Array {
     this.steps = steps
     this.options = {units: 'kilometers'}
     this.currentIndex = 0
+    // Temporary workaround for https://github.com/istanbuljs/babel-plugin-istanbul/issues/143 #TODO
+    /* eslint-disable no-proto */
+    // $FlowFixMe
+    this.constructor = AnimationBuffer
+    // $FlowFixMe
+    this.__proto__ = AnimationBuffer.prototype
+    /* eslint-enable */
   }
 
   continue() {
