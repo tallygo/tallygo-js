@@ -9,6 +9,7 @@ import AnimationBuffer from './animationBuffer'
 import Request from './request'
 import Route from './route'
 import { loadJSON, extend } from './utils'
+import { vehiclePointLayer } from './layerUtils'
 import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
 
 /**
@@ -55,5 +56,5 @@ const turf = {
   point: (coordinates, properties, options) => point(coordinates, properties, options)
 }
 
-const exported = { configure, loadJSON, Map, AnimationBuffer, Request, WebSocket, turf }
+const exported = { configure, loadJSON, Map, AnimationBuffer, Request, WebSocket, vehiclePointLayer, turf }
 export default exported

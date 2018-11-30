@@ -1,3 +1,5 @@
+import { extend } from './utils'
+
 const colorChart = [
   '#000000', '#cc0000',
   '#ff0000', '#ff8800',
@@ -5,9 +7,42 @@ const colorChart = [
   '#00ff00', '#00ff00',
   '#33FFCC'
 ]
+const vehicleLayerDefaultOptions = {
+  iconImage: 'airport-15',
+  initialCoordinates: [0, 0]
+}
 
 function calculateLastColor(mph) {
   return colorChart[Math.min(colorChart.length - 1, Math.round(mph / 10))]
+}
+
+export function vehiclePointLayer(options) {
+  options = extend({}, vehicleLayerDefaultOptions, options)
+  return {
+    'id': 'vehicle-point',
+    'type': 'symbol',
+    'source': {
+      'type': 'geojson',
+      'data': {
+        'type': 'FeatureCollection',
+        'features': [{
+          'type': 'Feature',
+          'properties': {},
+          'geometry': {
+            'type': 'Point',
+            'coordinates': options.initialCoordinates
+          }
+        }]
+      }
+    },
+    'layout': {
+      'icon-image': options.iconImage,
+      'icon-rotate': ['get', 'bearing'],
+      'icon-rotation-alignment': 'map',
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true
+    }
+  }
 }
 
 export function startEndLayer(start, end) {
