@@ -37,7 +37,7 @@
       }
 
       const webSocket = new TallyGo.WebSocket('ws://localhost:3200')
-      const animationBuffer = new TallyGo.AnimationBuffer(500)
+      const animationBuffer = new TallyGo.AnimationBuffer(10)
       const vehicleIcon = 'car-taxi'
       const vehicleLayer = TallyGo.vehiclePointLayer({iconImage: vehicleIcon})
       const sourceData = vehicleLayer.source.data
@@ -50,7 +50,7 @@
 
       function not_between(previous, current, range) {
         if (current > previous + range || current < previous - range) {
-          return true
+          return false
         }
         return false
       }
@@ -75,6 +75,10 @@
 
           map.getSource(vehicleLayer.id).setData(sourceData);
 
+          console.log('Current bearing was: ', currentBearing)
+          console.log("animationBuffer.length: ", animationBuffer.length)
+          console.log("animationBuffer.currentIndex: ", animationBuffer.currentIndex)
+          console.log('=================')
           if (animationBuffer.continue()) {
             // Request the next frame of animation unless we are approaching
             // the end of the buffer.
@@ -84,6 +88,8 @@
             // Remove all the coordinates that have already been animated.
             animationBuffer.truncate(0)
           }
+          console.log("animationBuffer.currentIndex after continue(): ", animationBuffer.currentIndex)
+          console.log('=================')
         }
 
         webSocket.onopen = function() {
@@ -105,6 +111,9 @@
           animationBuffer.add(coordinates)
           if (animationBuffer.length > 1 && animationBuffer.currentIndex === 0) {
             animate()
+          }
+          if (animationBuffer.length === 53) {
+            console.log(animationBuffer)
           }
         }
         webSocket.onclose = function() {

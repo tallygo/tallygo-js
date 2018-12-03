@@ -29,15 +29,15 @@ export default class AnimationBuffer extends Array {
   }
 
   current() {
-    return this[this.currentIndex]
+    return this[this.currentIndex].coordinates
   }
 
   bearingStart() {
-    return this[this.currentIndex]
+    return this[this.currentIndex].coordinates
   }
 
   bearingEnd() {
-    return this[this.currentIndex + 1]
+    return this[this.currentIndex + 1].coordinates
   }
 
   currentBearing() {
@@ -60,14 +60,20 @@ export default class AnimationBuffer extends Array {
     if ((this.length + 1) > 1) {
       this.calculateIntermediatePoints(coordinates)
     }
-    this.push(coordinates)
+    this.push({bearing: null, coordinates: coordinates})
+  }
+
+  distanceMeters(from, to) {
+    return distance(from, to, this.options) * 1000
   }
 
   calculateIntermediatePoints(coordinates) {
-    let from = this[this.length - 1]
+    let from = this[this.length - 1].coordinates
     let to = coordinates
-    let distanceM = (distance(from, to, this.options) * 1000)
+    let distanceM = this.distanceMeters(from, to)
     let stepDistance = (distanceM / this.steps)
+    console.log(distanceM)
+    console.log(stepDistance)
 
     for (var i = 0; i < distanceM; i += stepDistance) {
       if (i === 0) { continue } // The 0th coordinate is already present
@@ -76,7 +82,7 @@ export default class AnimationBuffer extends Array {
         (i / 1000),
         this.options
       )
-      this.push(segment.geometry.coordinates)
+      this.push({bearing: null, coordinates: segment.geometry.coordinates})
     }
   }
 }
