@@ -21,38 +21,6 @@
 
       let map = tallygo.map.glMap
 
-      function initPoint(map) {
-        let _point = {
-          "type": "FeatureCollection",
-          "features": [{
-            "type": "Feature",
-            "properties": {},
-            "geometry": {
-              "type": "Point",
-              "coordinates": [0, 0] // Place off screen initially
-            }
-          }]
-        }
-
-        map.addSource('point', {
-          "type": "geojson",
-          "data": _point
-        })
-        map.addLayer({
-          "id": "point",
-          "source": "point",
-          "type": "symbol",
-          "layout": {
-            "icon-image": "car-taxi",
-            "icon-rotate": ["get", "bearing"],
-            "icon-rotation-alignment": "map",
-            "icon-allow-overlap": true,
-            "icon-ignore-placement": true
-          }
-        })
-        return _point
-      }
-
       function flyToOptions(zoom, coordinates) {
         if (zoom <= 5) {
           return {
@@ -68,58 +36,78 @@
         }
       }
 
-      map.on('load', function () {
-        map.loadImage('images/car-taxi.png', function(error, image) {
-          if (error) throw error;
-          map.addImage('car-taxi', image);
-        })
+      const webSocket = new TallyGo.WebSocket('ws://localhost:3200')
+      const animationBuffer = new TallyGo.AnimationBuffer(500)
+      const vehicleIcon = 'car-taxi'
+      const vehicleLayer = TallyGo.vehiclePointLayer({iconImage: vehicleIcon})
+      const sourceData = vehicleLayer.source.data
+      let currentBearing = 0
 
-        const ws = new TallyGo.WebSocket('ws://localhost:3200')
-        let animationBuffer = new TallyGo.AnimationBuffer(700)
-        let point = initPoint(map)
+      map.loadImage('images/car-taxi.png', function(error, image) {
+        if (error) throw error;
+        map.addImage(vehicleIcon, image);
+      })
+
+      function not_between(previous, current, range) {
+        if (current > previous + range || current < previous - range) {
+          return true
+        }
+        return false
+      }
+      map.on('load', function () {
+        tallygo.map.addLayer(vehicleLayer)
 
         function animate() {
-          point.features[0].geometry.coordinates = animationBuffer.current()
-          point.features[0].properties.bearing = TallyGo.turf.bearing(
-            TallyGo.turf.point(animationBuffer.current()),
-            TallyGo.turf.point(animationBuffer.next())
-          );
+          if (not_between(currentBearing, animationBuffer.currentBearing(), 5)) {
+            console.log('=================')
+            console.log('Previous bearing was: ', currentBearing)
+            console.log('Current bearing is: ', animationBuffer.currentBearing())
+            console.log('previous: ', animationBuffer[animationBuffer.currentIndex - 1])
+            console.log('current (bearingStart): ', animationBuffer.bearingStart())
+            console.log('next (bearingEnd): ', animationBuffer.bearingEnd())
+            console.log('after next: ', animationBuffer[animationBuffer.currentIndex + 2])
+            console.log('currentIndex: ', animationBuffer.currentIndex)
+            console.log('=================')
+          }
+          currentBearing = animationBuffer.currentBearing()
+          sourceData.features[0].geometry.coordinates = animationBuffer.current()
+          sourceData.features[0].properties.bearing = animationBuffer.currentBearing()
 
-          // Update the map with this new data.
-          map.getSource('point').setData(point);
+          map.getSource(vehicleLayer.id).setData(sourceData);
 
           if (animationBuffer.continue()) {
             // Request the next frame of animation unless we are approaching
             // the end of the buffer.
-            requestAnimationFrame(animate)
             animationBuffer.advance()
+            requestAnimationFrame(animate)
           } else {
             // Remove all the coordinates that have already been animated.
-            animationBuffer.truncate()
+            animationBuffer.truncate(0)
           }
         }
 
-        ws.onopen = function() {
+        webSocket.onopen = function() {
           console.log("socket is open");
         }
-        ws.onmessage = function (evt) {
+        webSocket.onmessage = function (evt) {
           var received_msg = JSON.parse(evt.data)
+          console.log(received_msg)
           var coordinates = [
             received_msg.payload.longitude,
             received_msg.payload.latitude
           ]
+
 
           map.flyTo(
             flyToOptions(map.getZoom(), coordinates)
           )
 
           animationBuffer.add(coordinates)
-
-          if (animationBuffer.length > 2) {
+          if (animationBuffer.length > 1 && animationBuffer.currentIndex === 0) {
             animate()
           }
         }
-        ws.onclose = function() {
+        webSocket.onclose = function() {
           console.log("Connection is closed...")
         }
       })

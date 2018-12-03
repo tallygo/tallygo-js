@@ -1,4 +1,5 @@
-import { lineString } from '@turf/helpers'
+import { lineString, point } from '@turf/helpers'
+import bearing from '@turf/bearing'
 import along from '@turf/along'
 import distance from '@turf/distance'
 
@@ -18,24 +19,41 @@ export default class AnimationBuffer extends Array {
   }
 
   continue() {
-    return ((this.currentIndex + 3) < this.length)
+    if (this.currentIndex >= (this.length - 2)) {
+      return false
+    }
+    if (this.currentIndex === this.steps) {
+      this.truncate(this.currentIndex - this.steps)
+    }
+    return true
   }
 
   current() {
     return this[this.currentIndex]
   }
 
-  next() {
+  bearingStart() {
+    return this[this.currentIndex]
+  }
+
+  bearingEnd() {
     return this[this.currentIndex + 1]
+  }
+
+  currentBearing() {
+    return bearing(
+      point(this.bearingStart()),
+      point(this.bearingEnd())
+    )
   }
 
   advance() {
     this.currentIndex = this.currentIndex + 1
   }
 
-  truncate() {
-    this.splice(0, this.length - 3)
-    this.currentIndex = 0
+  truncate(startIndex) {
+    this.splice(startIndex, (this.currentIndex + 1))
+    this.currentIndex = startIndex
   }
 
   add(coordinates) {
@@ -49,8 +67,9 @@ export default class AnimationBuffer extends Array {
     let from = this[this.length - 1]
     let to = coordinates
     let distanceM = (distance(from, to, this.options) * 1000)
+    let stepDistance = (distanceM / this.steps)
 
-    for (var i = 0; i < distanceM; i += distanceM / this.steps) {
+    for (var i = 0; i < distanceM; i += stepDistance) {
       if (i === 0) { continue } // The 0th coordinate is already present
       var segment = along(
         lineString([from, to]),
