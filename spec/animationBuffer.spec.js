@@ -86,26 +86,17 @@ describe('AnimationBuffer', () => {
     })
   })
 
-  describe('advance', () => {
-    beforeEach(() => {
-      animationBuffer.currentIndex = 0
-    })
-
-    it('adds one to the currentIndex', () => {
-      animationBuffer.advance()
-      expect(animationBuffer.currentIndex).toEqual(1)
-    })
-  })
-
   describe('continue', () => {
     it('returns false when the currentIndex is within 2 of the length', () => {
       setAnimationBuffer(animationBuffer, 1, 0, [[1, 1], [2, 2], [3, 3]])
       expect(animationBuffer.continue()).toBe(false)
+      expect(animationBuffer.length).toEqual(1)
     })
 
     it('returns true when the currentIndex is 2 less than the length', () => {
       setAnimationBuffer(animationBuffer, 0, 0, [[1, 1], [2, 2], [3, 3]])
       expect(animationBuffer.continue()).toBe(true)
+      expect(animationBuffer.length).toEqual(3)
     })
 
     it('truncates when the currentIndex is equal to the steps', () => {
@@ -118,7 +109,7 @@ describe('AnimationBuffer', () => {
       )
 
       expect(animationBuffer.continue()).toBe(true)
-      expect(animationBuffer.currentIndex).toEqual(0)
+      expect(animationBuffer.currentIndex).toEqual(1)
       expect(animationBuffer.length).toEqual(2)
     })
   })

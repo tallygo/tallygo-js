@@ -55,12 +55,7 @@
           vehicleLayer.source.data.features[0].properties.bearing = animationBuffer.current().bearing
           map.getSource(vehicleLayer.id).setData(vehicleLayer.source.data)
 
-          if (animationBuffer.continue()) {
-            animationBuffer.advance()
-            requestAnimationFrame(animate)
-          } else {
-            animationBuffer.truncate(0)
-          }
+          if (animationBuffer.continue()) { requestAnimationFrame(animate) }
         }
 
         webSocket.onopen = function() {

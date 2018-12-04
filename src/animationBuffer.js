@@ -26,17 +26,14 @@ export default class AnimationBuffer extends Array {
     this.push({bearing: this.currentBearing, coordinates: coordinates})
   }
 
-  advance() {
-    this.currentIndex = this.currentIndex + 1
-  }
-
   continue() {
     if (this.currentIndex >= (this.length - 2)) {
+      this.truncate(0)
       return false
     }
-    if (this.currentIndex === this.steps) {
-      this.truncate(this.currentIndex - this.steps)
-    }
+
+    if (this.currentIndex === this.steps) { this.truncate(0) }
+    this.currentIndex = this.currentIndex + 1
     return true
   }
 
