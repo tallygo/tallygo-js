@@ -37,59 +37,30 @@
       }
 
       const webSocket = new TallyGo.WebSocket('ws://localhost:3200')
-      const animationBuffer = new TallyGo.AnimationBuffer(10)
       const vehicleIcon = 'car-taxi'
-      const vehicleLayer = TallyGo.vehiclePointLayer({iconImage: vehicleIcon})
-      const sourceData = vehicleLayer.source.data
-      let currentBearing = 0
 
       map.loadImage('images/car-taxi.png', function(error, image) {
         if (error) throw error;
         map.addImage(vehicleIcon, image);
       })
 
-      function not_between(previous, current, range) {
-        if (current > previous + range || current < previous - range) {
-          return false
-        }
-        return false
-      }
+      const animationBuffer = new TallyGo.AnimationBuffer(600)
+      const vehicleLayer = TallyGo.vehiclePointLayer({iconImage: vehicleIcon})
+
       map.on('load', function () {
         tallygo.map.addLayer(vehicleLayer)
 
         function animate() {
-          if (not_between(currentBearing, animationBuffer.currentBearing(), 5)) {
-            console.log('=================')
-            console.log('Previous bearing was: ', currentBearing)
-            console.log('Current bearing is: ', animationBuffer.currentBearing())
-            console.log('previous: ', animationBuffer[animationBuffer.currentIndex - 1])
-            console.log('current (bearingStart): ', animationBuffer.bearingStart())
-            console.log('next (bearingEnd): ', animationBuffer.bearingEnd())
-            console.log('after next: ', animationBuffer[animationBuffer.currentIndex + 2])
-            console.log('currentIndex: ', animationBuffer.currentIndex)
-            console.log('=================')
-          }
-          currentBearing = animationBuffer.currentBearing()
-          sourceData.features[0].geometry.coordinates = animationBuffer.current()
-          sourceData.features[0].properties.bearing = animationBuffer.currentBearing()
+          vehicleLayer.source.data.features[0].geometry.coordinates = animationBuffer.current().coordinates
+          vehicleLayer.source.data.features[0].properties.bearing = animationBuffer.current().bearing
+          map.getSource(vehicleLayer.id).setData(vehicleLayer.source.data)
 
-          map.getSource(vehicleLayer.id).setData(sourceData);
-
-          console.log('Current bearing was: ', currentBearing)
-          console.log("animationBuffer.length: ", animationBuffer.length)
-          console.log("animationBuffer.currentIndex: ", animationBuffer.currentIndex)
-          console.log('=================')
           if (animationBuffer.continue()) {
-            // Request the next frame of animation unless we are approaching
-            // the end of the buffer.
             animationBuffer.advance()
             requestAnimationFrame(animate)
           } else {
-            // Remove all the coordinates that have already been animated.
             animationBuffer.truncate(0)
           }
-          console.log("animationBuffer.currentIndex after continue(): ", animationBuffer.currentIndex)
-          console.log('=================')
         }
 
         webSocket.onopen = function() {
@@ -97,23 +68,20 @@
         }
         webSocket.onmessage = function (evt) {
           var received_msg = JSON.parse(evt.data)
-          console.log(received_msg)
           var coordinates = [
             received_msg.payload.longitude,
             received_msg.payload.latitude
           ]
-
 
           map.flyTo(
             flyToOptions(map.getZoom(), coordinates)
           )
 
           animationBuffer.add(coordinates)
+          console.log("points: ", animationBuffer.length)
+
           if (animationBuffer.length > 1 && animationBuffer.currentIndex === 0) {
             animate()
-          }
-          if (animationBuffer.length === 53) {
-            console.log(animationBuffer)
           }
         }
         webSocket.onclose = function() {
