@@ -36,26 +36,49 @@
         }
       }
 
+      class VehicleLocationAnimation {
+        constructor(buffer, layer, window) {
+          this.buffer = buffer
+          this.layer = layer
+          this.window = window
+        }
+      }
       const webSocket = new TallyGo.WebSocket('ws://localhost:3200')
       const vehicleIcon = 'car-taxi'
+      const vehicleId = 'F5FAB824-F841-49C1-B545-BE79DF00FEA0'
+
+      const animationBuffer = new TallyGo.AnimationBuffer(600)
+      const vehicleLayer = TallyGo.vehiclePointLayer({iconImage: vehicleIcon})
+
+      const vehicle1 = new VehicleLocationAnimation(
+        new TallyGo.AnimationBuffer(600),
+        TallyGo.vehiclePointLayer({id: vehicleId, iconImage: vehicleIcon}),
+        window
+      )
+      console.log(vehicle1)
 
       map.loadImage('images/car-taxi.png', function(error, image) {
         if (error) throw error;
         map.addImage(vehicleIcon, image);
       })
 
-      const animationBuffer = new TallyGo.AnimationBuffer(600)
-      const vehicleLayer = TallyGo.vehiclePointLayer({iconImage: vehicleIcon})
+      // const vehicleAnimations = [
+      //   vehicle1,
+      //   vehicle2
+      // ]
 
       map.on('load', function () {
         tallygo.map.addLayer(vehicleLayer)
+        // vehicleAnimations.forEach((vehicle) => {
+        //   tallygo.map.addLayer(vehicle.layer)
+        // })
 
         function animate() {
           vehicleLayer.source.data.features[0].geometry.coordinates = animationBuffer.current().coordinates
           vehicleLayer.source.data.features[0].properties.bearing = animationBuffer.current().bearing
           map.getSource(vehicleLayer.id).setData(vehicleLayer.source.data)
 
-          if (animationBuffer.continue()) { requestAnimationFrame(animate) }
+          if (animationBuffer.continue()) { window.requestAnimationFrame(animate) }
         }
 
         webSocket.onopen = function() {
@@ -63,6 +86,7 @@
         }
         webSocket.onmessage = function (evt) {
           var received_msg = JSON.parse(evt.data)
+          console.log(received_msg)
           var coordinates = [
             received_msg.payload.longitude,
             received_msg.payload.latitude

@@ -8,6 +8,7 @@ const colorChart = [
   '#33FFCC'
 ]
 const vehicleLayerDefaultOptions = {
+  id: 'vehicle-point',
   iconImage: 'airport-15',
   initialCoordinates: [0, 0]
 }
@@ -19,7 +20,7 @@ function calculateLastColor(mph) {
 export function vehiclePointLayer(options) {
   options = extend({}, vehicleLayerDefaultOptions, options)
   return {
-    'id': 'vehicle-point',
+    'id': options.id,
     'type': 'symbol',
     'source': {
       'type': 'geojson',
