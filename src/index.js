@@ -1,15 +1,12 @@
 // @flow
 
 import WebSocket from 'isomorphic-ws'
-import bearing from '@turf/bearing'
-import { point } from '@turf/helpers'
 import { version } from '../package.json'
 import Map from './map'
-import AnimationBuffer from './animationBuffer'
 import Request from './request'
 import Route from './route'
+import VehicleCollection from './vehicleCollection'
 import { loadJSON, extend } from './utils'
-import { vehiclePointLayer } from './layerUtils'
 import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
 
 /**
@@ -51,10 +48,5 @@ function configure (options) {
   return api
 }
 
-const turf = {
-  bearing: (start, end, options) => bearing(start, end, options),
-  point: (coordinates, properties, options) => point(coordinates, properties, options)
-}
-
-const exported = { configure, loadJSON, Map, AnimationBuffer, Request, WebSocket, vehiclePointLayer, turf }
+const exported = { configure, loadJSON, Map, Request, WebSocket, VehicleCollection }
 export default exported
