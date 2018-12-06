@@ -32,6 +32,7 @@ export default class VehicleAnimation {
     this.panMap = options.panMap
     this.webSocket = new WebSocket(options.wsUrl)
     this.parseWSevent = defaultParseWSevent
+    this.animationInProgress = false
   }
 
   animate() {
@@ -56,29 +57,37 @@ export default class VehicleAnimation {
     this.centerMapOnLocation(update.coordinates)
     let vehicle = this.findOrInitVehicle(update.session_id)
     vehicle.buffer.add(update.coordinates)
-    return this.startAnimation()
+    return this.startAnimation(vehicle)
   }
 
-  startAnimation() {
-    return this.collection.some(
-      (vehicle) => {
-        return (vehicle.buffer.length > 1 && vehicle.buffer.currentIndex === 0)
-      }
+  startAnimation(vehicle) {
+    this.animationInProgress = (
+      !this.animationInProgress &&
+      vehicle.buffer.length > 1 &&
+      vehicle.buffer.currentIndex === 0
     )
+    return this.animationInProgress
   }
 
   continueAnimation() {
     this.updateLayers()
-    return this.collection.some(
+    this.animationInProgress = this.collection.map(
       (vehicle) => { return vehicle.buffer.continue() }
-    )
+    ).some((boolean) => { return boolean })
+    return this.animationInProgress
   }
 
   updateLayers() {
     let glMap = this.map.glMap
     this.collection.forEach(function(vehicle) {
-      vehicle.layer.source.data.features[0].geometry.coordinates = vehicle.buffer.current().coordinates
-      vehicle.layer.source.data.features[0].properties.bearing = vehicle.buffer.current().bearing
+      try {
+        vehicle.layer.source.data.features[0].geometry.coordinates = vehicle.buffer.current().coordinates
+        vehicle.layer.source.data.features[0].properties.bearing = vehicle.buffer.current().bearing
+      } catch (err) {
+        console.log('id: ', vehicle.layer.id)
+        console.log('vehicle buffer ', vehicle.buffer)
+        throw (err)
+      }
     })
     this.collection.forEach(function(vehicle) {
       glMap.getSource(vehicle.layer.id).setData(vehicle.layer.source.data)
