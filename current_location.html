@@ -21,20 +21,6 @@
           ]
         }
       }
-      function flyToOptions(zoom, coordinates) {
-        if (zoom <= 5) {
-          return {
-            center: coordinates,
-            zoom: 15,
-            speed: 1
-          }
-        }
-        return {
-          center: coordinates,
-          zoom: zoom,
-          speed: 0.2
-        }
-      }
 
       const tallygo = TallyGo.configure({
         apiToken: '22a2db381ba59ca2b4be2d21cea456e7',
@@ -44,7 +30,12 @@
       })
       const webSocket = new TallyGo.WebSocket('ws://localhost:3200')
       const vehicleIcon = 'car-taxi'
-      const vehicles = new TallyGo.VehicleCollection(tallygo.map, vehicleIcon, 600)
+      const vehicles = new TallyGo.VehicleCollection({
+        map: tallygo.map,
+        vehicleIcon: vehicleIcon,
+        animationSteps: 600,
+        panMap: true
+      })
 
       webSocket.onopen = function() { console.log("socket is open") }
       webSocket.onclose = function() { console.log("Connection is closed...") }
@@ -63,12 +54,6 @@
 
         webSocket.onmessage = function(event) {
           let update = extractUpdate(JSON.parse(event.data))
-
-          if (vehicles.length() < 2) {
-            vehicles.map.glMap.flyTo(
-              flyToOptions(vehicles.map.glMap.getZoom(), update.coordinates)
-            )
-          }
 
           if (vehicles.locationUpdate(update)) {
             animate()

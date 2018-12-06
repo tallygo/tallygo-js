@@ -2,17 +2,22 @@
 
 import AnimationBuffer from './animationBuffer'
 import { vehiclePointLayer } from './layerUtils'
+import { extend } from './utils'
+
+const defaultOptions = {
+  vehicleIcon: 'airport-15',
+  animationSteps: 600,
+  panMap: true
+}
 
 export default class VehicleCollection {
-  constructor(map, vehicleIcon, animationSteps) {
-    this.map = map
+  constructor(options) {
+    options = extend({}, defaultOptions, options)
     this.collection = []
-    this.animationSteps = animationSteps
-    this.vehicleIcon = vehicleIcon
-  }
-
-  length() {
-    return this.collection.length
+    this.map = options.map
+    this.animationSteps = options.animationSteps
+    this.vehicleIcon = options.vehicleIcon
+    this.panMap = options.panMap
   }
 
   find(sessionId) {
@@ -41,7 +46,16 @@ export default class VehicleCollection {
     return vehicle
   }
 
+  centerMapOnLocation(coordinates) {
+    if (this.panMap && this.collection.length < 2) {
+      this.map.glMap.flyTo(
+        this.flyToOptions(this.map.glMap.getZoom(), coordinates)
+      )
+    }
+  }
+
   locationUpdate(update) {
+    this.centerMapOnLocation(update.coordinates)
     let vehicle = this.findOrInitVehicle(update.session_id)
     vehicle.buffer.add(update.coordinates)
     return this.startAnimation()
@@ -53,6 +67,21 @@ export default class VehicleCollection {
         return (vehicle.buffer.length > 1 && vehicle.buffer.currentIndex === 0)
       }
     )
+  }
+
+  flyToOptions(zoom, coordinates) {
+    if (zoom <= 5) {
+      return {
+        center: coordinates,
+        zoom: 15,
+        speed: 1
+      }
+    }
+    return {
+      center: coordinates,
+      zoom: zoom,
+      speed: 0.2
+    }
   }
 
   continueAnimation() {
