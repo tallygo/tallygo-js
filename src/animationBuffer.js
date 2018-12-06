@@ -27,7 +27,7 @@ export default class AnimationBuffer extends Array {
   }
 
   continue() {
-    if (this.currentIndex >= (this.length - 2)) {
+    if (this.currentIndex >= (this.length - 1)) {
       this.truncate(0)
       return false
     }
@@ -42,7 +42,7 @@ export default class AnimationBuffer extends Array {
   }
 
   truncate(startIndex) {
-    this.splice(startIndex, (this.currentIndex + 1))
+    this.splice(startIndex, this.currentIndex)
     this.currentIndex = startIndex
   }
 

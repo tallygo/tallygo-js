@@ -87,8 +87,8 @@ describe('AnimationBuffer', () => {
   })
 
   describe('continue', () => {
-    it('returns false when the currentIndex is within 2 of the length', () => {
-      setAnimationBuffer(animationBuffer, 1, 0, [[1, 1], [2, 2], [3, 3]])
+    it('returns false when the currentIndex is within 1 of the length', () => {
+      setAnimationBuffer(animationBuffer, 2, 0, [[1, 1], [2, 2], [3, 3]])
       expect(animationBuffer.continue()).toBe(false)
       expect(animationBuffer.length).toEqual(1)
     })
@@ -110,7 +110,7 @@ describe('AnimationBuffer', () => {
 
       expect(animationBuffer.continue()).toBe(true)
       expect(animationBuffer.currentIndex).toEqual(1)
-      expect(animationBuffer.length).toEqual(2)
+      expect(animationBuffer.length).toEqual(3)
     })
   })
 
@@ -130,9 +130,9 @@ describe('AnimationBuffer', () => {
 
       animationBuffer.truncate(0)
 
-      expect(animationBuffer.length).toEqual(2)
+      expect(animationBuffer.length).toEqual(3)
       expect(animationBuffer.currentIndex).toEqual(0)
-      expect(animationBuffer[0].coordinates).toEqual([3, 3])
+      expect(animationBuffer[0].coordinates).toEqual([2, 2])
     })
   })
 
