@@ -5,9 +5,9 @@
     <title>TallyGo Current location animation example</title>
     <meta name="description" content="TallyGo Current Location animation">
     <meta name="author" content="TallyGo">
-    <script src="node_modules/mapbox-gl/dist/mapbox-gl-dev.js"></script>
-    <link rel="stylesheet" media="screen" href="node_modules/mapbox-gl/dist/mapbox-gl.css" />
-    <script src="dist/browser.js"></script>
+    <script src="../node_modules/mapbox-gl/dist/mapbox-gl-dev.js"></script>
+    <link rel="stylesheet" media="screen" href="../node_modules/mapbox-gl/dist/mapbox-gl.css" />
+    <script src="../dist/browser.js"></script>
   </head>
   <body>
     <div id="tallygo-map"></div>
@@ -20,12 +20,12 @@
       })
       const animationOptions = {
         vehicleIcon: 'car-taxi',
-        animationSteps: 500,
+        animationSteps: 100,
         panMap: true,
         wsUrl: 'ws://localhost:3200'
       }
       const vehicleAnimation = new TallyGo.VehicleAnimation(tallygo.map, animationOptions)
-      vehicleAnimation.map.glMap.loadImage('images/car-taxi.png', function(error, image) {
+      vehicleAnimation.map.glMap.loadImage('../images/car-taxi.png', function(error, image) {
         if (error) throw error;
         vehicleAnimation.map.glMap.addImage('car-taxi', image)
       })
