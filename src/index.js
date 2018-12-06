@@ -1,11 +1,10 @@
 // @flow
 
-import WebSocket from 'isomorphic-ws'
 import { version } from '../package.json'
 import Map from './map'
 import Request from './request'
 import Route from './route'
-import VehicleCollection from './vehicleCollection'
+import VehicleAnimation from './vehicleAnimation'
 import { loadJSON, extend } from './utils'
 import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
 
@@ -48,5 +47,5 @@ function configure (options) {
   return api
 }
 
-const exported = { configure, loadJSON, Map, Request, WebSocket, VehicleCollection }
+const exported = { configure, loadJSON, Map, Request, VehicleAnimation }
 export default exported
