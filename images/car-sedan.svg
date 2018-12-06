@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.3 (57544) - http://www.bohemiancoding.com/sketch -->
+    <title>car-sedan</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="0.00261369577%" y1="50%" x2="99.9973863%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#363636" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+        <path d="M21.564,43.457 C21.564,45.955 19.909,48 17.885,48 L6.114,48 C4.092,48 2.435,45.955 2.435,43.457 L2.435,6.026 C2.436,3.528 4.68,0 6.703,0 L17.297,0 C19.32,0 21.565,3.528 21.565,6.026 L21.565,43.457 L21.564,43.457 Z" id="path-2"></path>
+        <filter x="-31.4%" y="-12.5%" width="162.7%" height="125.0%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="2" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="-0.00412739905%" y1="50.000573%" x2="99.9972484%" y2="50.000573%" id="linearGradient-4">
+            <stop stop-color="#575757" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="-0.0143215181%" y1="49.9901368%" x2="99.9820981%" y2="49.9901368%" id="linearGradient-5">
+            <stop stop-color="#363636" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0.0179018976%" y1="49.9901368%" x2="100.014322%" y2="49.9901368%" id="linearGradient-6">
+            <stop stop-color="#363636" offset="0%"></stop>
+            <stop stop-color="#000000" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="car-sedan" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(16.000000, 4.000000)" fill-rule="nonzero" id="Group">
+            <g>
+                <g id="Shape">
+                    <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                    <use fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                </g>
+                <path d="M4.352,14.685 C4.352,14.685 5.405,17.453 12,17.453 C18.597,17.453 19.649,14.685 19.649,14.685 L17.651,0.113 C17.436,0.04 17.219,0 17.005,0 L6.41,0 C6.394,0 6.38,0 6.364,0.001 L4.352,14.685 Z" id="Shape" fill="#F0F0F0"></path>
+                <path d="M19.269,14.685 L17.36,0.035 C17.241,0.012 17.122,0 17.005,0 L6.645,0 L4.732,14.685 C4.732,14.685 5.732,17.453 12.001,17.453 C18.27,17.453 19.269,14.685 19.269,14.685 Z" id="Shape" fill="url(#linearGradient-4)"></path>
+                <path d="M17.053,47.996 L6.947,47.996 L6.947,47.037 C5.176,46.986 3.745,44.971 3.744,42.502 L3.744,39.449 L20.256,39.449 L20.256,42.502 C20.256,44.971 18.824,46.986 17.053,47.037 L17.053,47.996 Z M7.254,47.617 L16.745,47.617 L16.745,46.658 L16.986,46.658 C18.619,46.658 19.948,44.793 19.948,42.502 L19.948,39.828 L4.053,39.828 L4.053,42.502 C4.053,44.793 5.381,46.658 7.015,46.658 L7.254,46.658 L7.254,47.617 Z" id="Shape" fill="#F0F0F0"></path>
+                <path d="M20.292,12.839 C20.292,12.839 19.151,11.638 12,11.638 C4.85,11.638 3.708,12.839 3.708,12.839 L6.217,20.161 L17.784,20.161 L20.292,12.839 Z" id="Shape" fill="#000000"></path>
+                <path d="M3.708,39.441 C3.708,39.441 4.85,42.013 12,42.013 C19.152,42.013 20.292,39.441 20.292,39.441 L17.784,36.47 L6.217,36.47 L3.708,39.441 Z" id="Shape" fill="#000000"></path>
+                <g transform="translate(18.000000, 15.000000)" fill="#000000" id="Shape">
+                    <polygon points="2.292 12.965 2.292 0.232 0.274 6.165 0.274 12.965"></polygon>
+                    <polygon points="0.274 13.939 0.274 20.604 2.292 23.199 2.292 13.939"></polygon>
+                </g>
+                <g transform="translate(3.000000, 15.000000)" fill="#000000" id="Shape">
+                    <polygon points="0.708 13.939 0.708 23.199 2.727 20.604 2.727 13.939"></polygon>
+                    <polygon points="2.727 12.965 2.727 6.165 0.708 0.232 0.708 12.965"></polygon>
+                </g>
+                <path d="M17.715,20.162 C16.71,20.158 5.046,19.937 5.046,12.272 C3.973,12.56 3.708,12.839 3.708,12.839 L6.217,20.161 L17.715,20.161 L17.715,20.162 Z" id="Shape" fill="#363636"></path>
+                <path d="M17.702,0.415 L17.953,2.338 C19.776,2.961 21.564,5.986 21.564,8.198 L21.564,43.459 L21.564,43.457 L21.564,6.345 C21.564,4.032 19.608,0.83 17.702,0.415 Z" id="Shape" fill="#FFFFFF"></path>
+                <path d="M6.308,0.413 C4.399,0.819 2.436,4.028 2.436,6.346 L2.436,8.196 C2.438,5.986 4.223,2.967 6.044,2.341 L6.308,0.413 Z" id="Shape" fill="#FFFFFF"></path>
+                <path d="M6.947,47.037 L6.114,46.998 C4.092,46.998 2.436,44.955 2.435,42.457 L2.435,43.457 C2.435,45.955 4.091,48 6.114,48 L6.947,47.996 L6.947,47.037 Z" id="Shape" fill="#FF0000"></path>
+                <path d="M17.886,46.998 L17.053,47.037 L17.053,47.996 L17.886,48 C19.909,48 21.565,45.955 21.565,43.457 L21.565,42.455 C21.564,44.953 19.909,46.998 17.886,46.998 Z" id="Shape" fill="#FF0000"></path>
+                <g transform="translate(0.000000, 13.000000)" id="Shape">
+                    <path d="M3.77,1.253 L1.077,2.232 L0.977,1.816 C0.977,1.816 1.112,0.713 2.093,0.357 C3.075,5.55111512e-17 3.672,0.837 3.672,0.837 L3.77,1.253 Z" fill="url(#linearGradient-5)"></path>
+                    <path d="M20.23,1.253 L22.923,2.232 L23.023,1.816 C23.023,1.816 22.889,0.713 21.907,0.357 C20.925,5.55111512e-17 20.329,0.837 20.329,0.837 L20.23,1.253 Z" fill="url(#linearGradient-6)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
