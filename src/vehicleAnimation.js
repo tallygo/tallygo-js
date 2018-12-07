@@ -7,7 +7,7 @@ import { extend } from './utils'
 
 const defaultOptions = {
   vehicleIcon: 'airport-15',
-  animationSteps: 600,
+  animationSteps: 500,
   panMap: true,
   logMessages: false
 }
@@ -33,10 +33,10 @@ const defaultParseWSevent = function(event) {
  * @param {Map} map Instance of TallyGo.Map object
  * @param {Object} options
  * @param {string} options.wsUrl The url on which to listen for WebSocket events describing vehicle location updates.
- * @param {string} options.vehicleIcon The string identifying the vehicle image to use for the animation.
- * @param {number} options.animationSteps The number of steps to use for 'tweening'. More steps will result in a smoother, slower animation.
- * @param {boolean} options.logMessages Logs each message received to the console if set to true
- * @param {boolean} options.panMap boolean that causes the map to zoom and pan following the animated vehicle as it moves around the map.
+ * @param {string} [options.vehicleIcon='airport-15'] The string identifying the vehicle image to use for the animation.
+ * @param {number} [options.animationSteps=500] The number of steps to use for 'tweening'. More steps will result in a smoother, slower animation.
+ * @param {boolean} [options.logMessages=false] Logs each message received to the console if set to true
+ * @param {boolean} [options.panMap=true] boolean that causes the map to zoom and pan following the animated vehicle as it moves around the map.
  *    During a multiple vehicle animation only the first point received will be used. Subsequent updates will not move the map.
  *
  * @example
@@ -172,7 +172,7 @@ export default class VehicleAnimation {
    * in the animation. So if the panMap boolean is set to true, as soon as
    * the vehicleAnimation receives an event for a second vehicle it will stop
    * panning the map to follow the first vehicle in the animation.
-   * @param {Array} coordinates Longitude, latitude pair
+   * @param {LngLatLike} coordinates
    */
   updateMapCenter(coordinates) {
     if (this.panMap && this.collection.length < 2) {

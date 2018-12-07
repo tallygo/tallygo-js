@@ -6,12 +6,69 @@
     <meta name="description" content="TallyGo Examples">
     <meta name="author" content="TallyGo">
   </head>
-  <body>
+  <body style="font-family: Lato, 'Helvetica Neue', Arial, sans-serif;">
     <h1>TallyGoKit-JS Examples</h1>
-    <ul>
-      <li><a href="./route.html">Request and render route</a></li>
-      <li><a href="./current_location.html">Animate vehicle location updates</a></li>
-    </ul>
+    <p><a href="./route.html">Request and render route</a></p>
+    <pre>
+      &lt;body&gt;
+        &lt;div id="tallygo-map"&gt;&lt;/div&gt;
+        &lt;script&gt; <code>
+          const tallygo = TallyGo.configure({
+            apiToken: '&lt;YOUR API TOKEN&gt;',
+            map: { navPosition: 'top-left' },
+            request: { apiUrl: 'https://api.tallygo.com/v1/route' }
+          })
+
+          const requestOptions = {
+            startPoint: [34.76151710977818, -112.0571484988772],
+            endPoint: [34.76260434283671, -112.01666952034871],
+            time: '2018-11-13T01:31:51-0800',
+            course: 0,
+            speed: 0,
+            requestType: 'DepartureTime',
+            minimizeDifficultLeftTurns: 'false',
+            useCarpoolLanes: 'false',
+            useExpressLanes: 'false',
+            staticWeights: 'false'
+          }
+
+          tallygo.request.get(requestOptions).then(
+            function(json) {
+              tallygo.map.draw(
+                [tallygo.newRoute(json)]
+              )
+            }
+          )
+        </code>&lt;/script&gt;
+      &lt;/body&gt;
+    </pre>
+    <p><a href="./current_location.html">Animate vehicle location updates</a></p>
+    <pre>
+      &lt;body&gt;
+        &lt;div id="tallygo-map"&gt;&lt;/div&gt;
+        &lt;script&gt; <code>
+          const tallygo = TallyGo.configure({
+            apiToken: '&lt;YOUR API TOKEN&gt;',
+            map: { navPosition: 'top-left' },
+            request: { apiUrl: 'https://api.tallygo.com/v1/route' }
+          })
+          const animationOptions = {
+            vehicleIcon: 'car-taxi',
+            animationSteps: 550,
+            panMap: true,
+            wsUrl: 'ws://localhost:3200'
+          }
+          const vehicleAnimation = new TallyGo.VehicleAnimation(tallygo.map, animationOptions)
+          vehicleAnimation.map.glMap.loadImage('../images/car-taxi.png', function(error, image) {
+            if (error) throw error;
+            vehicleAnimation.map.glMap.addImage('car-taxi', image)
+          })
+          vehicleAnimation.webSocket.onopen = function() { console.log("socket is open") }
+          vehicleAnimation.webSocket.onclose = function() { console.log("Connection is closed...") }
+          vehicleAnimation.animate() // load the map and listen for location updates.
+        </code>&lt;/script&gt;
+      &lt;/body&gt;
+    </pre>
   </body>
 </html>
 
