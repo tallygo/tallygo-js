@@ -38,14 +38,20 @@
     "st": "^1.2.2"
   },
   "dependencies": {
-    "mapbox-gl": "^0.50.0"
+    "@turf/along": "^6.0.1",
+    "@turf/bearing": "^6.0.1",
+    "@turf/distance": "^6.0.1",
+    "@turf/point-to-line-distance": "^6.0.0",
+    "isomorphic-ws": "^4.0.1",
+    "mapbox-gl": "^0.50.0",
+    "ws": "^6.1.2"
   },
   "scripts": {
     "build:dev": "rollup -c --environment BUILD:dev",
     "watch:dev": "rollup -c --environment BUILD:dev --watch",
     "build:min": "rollup -c --environment BUILD:production",
-    "build:docs": "documentation build src/** -f html -o docs",
-    "start-server": "st --no-cache -H 0.0.0.0 --port 9966 --index index.html .",
+    "build:docs": "documentation build src/** -f html -o documentation",
+    "start": "st --no-cache -H 0.0.0.0 --port 9966 --index index.html .",
     "lint": "eslint src/*.js spec/*.js",
     "test": "run-s lint test:unit",
     "test:unit": "jest spec/** --coverage",

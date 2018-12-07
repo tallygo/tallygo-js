@@ -4,6 +4,7 @@ import { version } from '../package.json'
 import Map from './map'
 import Request from './request'
 import Route from './route'
+import VehicleAnimation from './vehicleAnimation'
 import { loadJSON, extend } from './utils'
 import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
 
@@ -34,8 +35,6 @@ function configure (options) {
   const requestOptions = extend(
     {apiKey: options['apiToken']}, REQUEST_DEFAULTS, options['request']
   )
-  // console.log('mapOptions: ', mapOptions)
-  // console.log('requestOptions: ', requestOptions)
   const api = {
     map: new Map(mapOptions),
     request: new Request(requestOptions),
@@ -46,5 +45,5 @@ function configure (options) {
   return api
 }
 
-const exported = { configure, loadJSON, Map, Request }
+const exported = { configure, loadJSON, Map, Request, VehicleAnimation }
 export default exported

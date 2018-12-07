@@ -31,4 +31,10 @@ describe('Route', () => {
   it('returns the expected endLonLat', () => {
     expect(route.endLonLat()).toEqual([-111.816391, 34.825415])
   })
+
+  it('returns the expected coordinates', () => {
+    let coordinates = route.coordinates()
+    expect(coordinates[0]).toEqual([-112.056714, 34.761876])
+    expect(coordinates[coordinates.length - 1]).toEqual([-111.816391, 34.825415])
+  })
 })

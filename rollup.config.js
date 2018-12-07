@@ -24,12 +24,15 @@ export default [
   // browser-friendly umd build
   {
     input: 'src/index.js',
-    external: ['mapbox-gl'],
+    external: ['mapbox-gl', 'isomorphic-ws'],
     output: {
-      globals: {'mapbox-gl': 'mapboxgl'},
+      globals: {
+        'mapbox-gl': 'mapboxgl',
+        'isomorphic-ws': 'WebSocket'
+      },
       name: 'TallyGo',
       file: pkg.browser,
-      format: 'umd',
+      format: 'iife',
       sourcemap: production ? true : 'inline'
     },
     plugins: [
@@ -47,7 +50,15 @@ export default [
   },
   {
     input: 'src/index.js',
-    external: ['mapbox-gl'],
+    external: [
+      'mapbox-gl',
+      'isomorphic-ws',
+      'ws',
+      '@turf/helpers',
+      '@turf/along',
+      '@turf/bearing',
+      '@turf/distance'
+    ],
     output: [
       // node friendly commonjs build
       { file: pkg.main, format: 'cjs' },
@@ -55,8 +66,11 @@ export default [
       { file: pkg.module, format: 'es' }
     ],
     plugins: [
+      resolve({
+        customResolveOptions: { moduleDirectory: 'node_modules' }
+      }),
       json({
-        exclude: [ 'node_modules/**' ]
+        exclude: ['node_modules/**']
       })
     ]
   }

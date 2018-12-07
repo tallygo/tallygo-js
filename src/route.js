@@ -19,6 +19,18 @@ export default class Route {
     this.lastSegment = this.segments[this.segments.length - 1]
   }
 
+  coordinates() {
+    return this.segments.reduce(
+      (acc, segment) => {
+        return acc.concat(
+          segment.points.map(
+            (point) => { return [point.lon, point.lat] }
+          )
+        )
+      }, []
+    )
+  }
+
   startLonLat() {
     return this.firstSegment.startLonLat()
   }

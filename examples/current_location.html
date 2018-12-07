@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TallyGo Current location animation example</title>
+    <meta name="description" content="TallyGo Current Location animation">
+    <meta name="author" content="TallyGo">
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="../dist/browser.js"></script>
+  </head>
+  <body>
+    <div id="tallygo-map"></div>
+    <script>
+      const tallygo = TallyGo.configure({apiToken: '<YOUR API TOKEN>'})
+      const animationOptions = {
+        vehicleIcon: 'car-taxi',
+        animationSteps: 550,
+        panMap: true,
+        wsUrl: 'ws://localhost:3200'
+      }
+      const vehicleAnimation = new TallyGo.VehicleAnimation(tallygo.map, animationOptions)
+      vehicleAnimation.map.glMap.loadImage('../images/car-taxi.png', function(error, image) {
+        if (error) throw error;
+        vehicleAnimation.map.glMap.addImage('car-taxi', image)
+      })
+      vehicleAnimation.webSocket.onopen = function() { console.log("socket is open") }
+      vehicleAnimation.webSocket.onclose = function() { console.log("Connection is closed...") }
+      vehicleAnimation.animate() // load the map and listen for location updates.
+    </script>
+  </body>
+</html>

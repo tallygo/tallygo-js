@@ -2,22 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>TallyGo Map</title>
-    <meta name="description" content="TallyGo Map">
+    <title>TallyGo Route example</title>
+    <meta name="description" content="TallyGo Route example">
     <meta name="author" content="TallyGo">
-    <script src="node_modules/mapbox-gl/dist/mapbox-gl-dev.js"></script>
-    <link rel="stylesheet" media="screen" href="node_modules/mapbox-gl/dist/mapbox-gl.css" />
-    <script src="dist/browser.js"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="../dist/browser.js"></script>
   </head>
   <body>
     <div id="tallygo-map"></div>
     <script>
-      const tallygo = TallyGo.configure({
-        apiToken: '<YOUR API TOKEN>',
-        map: { navPosition: 'top-left' },
-        request: { apiUrl: 'https://api.tallygo.com/v1/route' }
-      })
-
+      const tallygo = TallyGo.configure({apiToken: '<YOUR API TOKEN>'})
       const requestOptions = {
         startPoint: [34.76151710977818, -112.0571484988772],
         endPoint: [34.76260434283671, -112.01666952034871],
@@ -38,12 +33,6 @@
           )
         }
       )
-
-      // TallyGo.loadJSON('spec/fixtures/route.json', function(rawData) {
-      //   tallygo.map.draw([
-      //     tallygo.newRoute(JSON.parse(rawData))
-      //   ])
-      // })
     </script>
   </body>
 </html>

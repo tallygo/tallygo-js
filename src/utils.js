@@ -10,7 +10,9 @@
  * @private
  */
 export function extend(dest, ...sources) {
-  sources.forEach(function(src) {
+  sources.filter((source) => {
+    return source !== undefined
+  }).forEach(function(src) {
     Object.keys(src).forEach(function(key) {
       dest[key] = src[key]
     })
