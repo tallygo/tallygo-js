@@ -50,7 +50,7 @@
     "build:dev": "rollup -c --environment BUILD:dev",
     "watch:dev": "rollup -c --environment BUILD:dev --watch",
     "build:min": "rollup -c --environment BUILD:production",
-    "build:docs": "documentation build src/** -f html -o docs",
+    "build:docs": "documentation build src/** -f html -o documentation",
     "start": "st --no-cache -H 0.0.0.0 --port 9966 --index index.html .",
     "lint": "eslint src/*.js spec/*.js",
     "test": "run-s lint test:unit",

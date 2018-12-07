@@ -24,9 +24,8 @@ const defaultParseWSevent = function(event) {
 }
 
 /**
- * The `VehicleAnimation` object accepts a WebSocket address
- * and then listens for location updates that it will animate on
- * a map.
+ * The `VehicleAnimation` object accepts a WebSocket address and listens for location updates that it uses to
+ * animate a vehicle icon on the map.
  *
  * You create a `VehicleAnimation` by passing a map and a set of configuration options
  *
