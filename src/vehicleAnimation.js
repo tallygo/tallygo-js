@@ -23,6 +23,31 @@ const defaultParseWSevent = function(event) {
   }
 }
 
+/**
+ * The `VehicleAnimation` object accepts a WebSocket address
+ * and then listens for location updates that it will animate on
+ * a map.
+ *
+ * You create a `VehicleAnimation` by passing a map and a set of configuration options
+ *
+ * @param {Map} map Instance of TallyGo.Map object
+ * @param {Object} options
+ * @param {string} options.wsUrl The url on which to listen for WebSocket events describing vehicle location updates.
+ * @param {string} options.vehicleIcon The string identifying the vehicle image to use for the animation.
+ * @param {number} options.animationSteps The number of steps to use for 'tweening'. More steps will result in a smoother, slower animation.
+ * @param {boolean} options.logMessages Logs each message received to the console if set to true
+ * @param {boolean} options.panMap boolean that causes the map to zoom and pan following the animated vehicle as it moves around the map.
+ *    During a multiple vehicle animation only the first point received will be used. Subsequent updates will not move the map.
+ *
+ * @example
+ * var vehicleAnimation = new TallyGo.VehicleAnimation({
+ *   vehicleIcon: 'car-taxi',
+ *   animationSteps: 550,
+ *   panMap: false,
+ *   logMessages: true,
+ *   wsUrl: 'ws://localhost:3200'
+ * })
+ */
 export default class VehicleAnimation {
   constructor(map, options) {
     options = extend({}, defaultOptions, options)
@@ -33,10 +58,33 @@ export default class VehicleAnimation {
     this.panMap = options.panMap
     this.logMessages = options.logMessages
     this.webSocket = new WebSocket(options.wsUrl)
+    /**
+     * Is the function that accepts the WebSocket event and extracts the necessary data for
+     * VehicleAnimation.updateLocation function
+     *
+     * @example
+     * let vehicleAnimation = new VehicleAnimation(map, animationOptions)
+     * vehicleAnimation.parseWSevent = function(event) {
+     *   let message = JSON.parse(event.data)
+     *   return {
+     *     session_id: message.session_id,
+     *     coordinates: [
+     *       message.payload.longitude,
+     *       message.payload.latitude
+     *     ]
+     *   }
+     * }
+     */
     this.parseWSevent = defaultParseWSevent
     this.animationInProgress = false
   }
 
+  /**
+   * Sets the webSocket's onmessage callback function to parse and process incoming
+   * WebSocket event data and then kick off or update the animation
+   * @example
+   * vehicleAnimation.animate()
+   */
   animate() {
     let self = this
     this.map.glMap.on('load', function() {
@@ -118,6 +166,14 @@ export default class VehicleAnimation {
     return vehicle
   }
 
+  /**
+   * This pans the map to follow the vehicle as it moves across the map.
+   * It will not attempt to pan the map if there is more than one vehicle
+   * in the animation. So if the panMap boolean is set to true, as soon as
+   * the vehicleAnimation receives an event for a second vehicle it will stop
+   * panning the map to follow the first vehicle in the animation.
+   * @param {Array} coordinates Longitude, latitude pair
+   */
   updateMapCenter(coordinates) {
     if (this.panMap && this.collection.length < 2) {
       this.map.glMap.flyTo(
