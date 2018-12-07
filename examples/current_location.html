@@ -5,18 +5,14 @@
     <title>TallyGo Current location animation example</title>
     <meta name="description" content="TallyGo Current Location animation">
     <meta name="author" content="TallyGo">
-    <script src="../node_modules/mapbox-gl/dist/mapbox-gl-dev.js"></script>
-    <link rel="stylesheet" media="screen" href="../node_modules/mapbox-gl/dist/mapbox-gl.css" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css" rel="stylesheet" />
     <script src="../dist/browser.js"></script>
   </head>
   <body>
     <div id="tallygo-map"></div>
     <script>
-      const tallygo = TallyGo.configure({
-        apiToken: '<YOUR API TOKEN>',
-        map: { navPosition: 'top-left' },
-        request: { apiUrl: 'https://api.tallygo.com/v1/route' }
-      })
+      const tallygo = TallyGo.configure({apiToken: '<YOUR API TOKEN>'})
       const animationOptions = {
         vehicleIcon: 'car-taxi',
         animationSteps: 550,
