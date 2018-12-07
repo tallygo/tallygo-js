@@ -35,8 +35,6 @@ function configure (options) {
   const requestOptions = extend(
     {apiKey: options['apiToken']}, REQUEST_DEFAULTS, options['request']
   )
-  // console.log('mapOptions: ', mapOptions)
-  // console.log('requestOptions: ', requestOptions)
   const api = {
     map: new Map(mapOptions),
     request: new Request(requestOptions),

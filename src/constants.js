@@ -2,6 +2,7 @@ const MAP_DEFAULTS = {
   center: [-95.84, 37.78],
   container: 'tallygo-map',
   hash: true,
+  navPosition: 'top-left',
   styleHost: 'maptiles.tallygo.com',
   traffic: 0,
   zoom: 4
@@ -15,7 +16,8 @@ const REQUEST_DEFAULTS = {
   minimizeDifficultLeftTurns: false,
   useCarpoolLanes: false,
   useExpressLanes: false,
-  staticWeights: false
+  staticWeights: false,
+  apiUrl: 'https://api.tallygo.com/v1/route'
 }
 const permittedParams = {
   requestType: 'string',
