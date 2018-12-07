@@ -8,7 +8,8 @@ import { extend } from './utils'
 const defaultOptions = {
   vehicleIcon: 'airport-15',
   animationSteps: 600,
-  panMap: true
+  panMap: true,
+  logMessages: false
 }
 
 const defaultParseWSevent = function(event) {
@@ -30,6 +31,7 @@ export default class VehicleAnimation {
     this.animationSteps = options.animationSteps
     this.vehicleIcon = options.vehicleIcon
     this.panMap = options.panMap
+    this.logMessages = options.logMessages
     this.webSocket = new WebSocket(options.wsUrl)
     this.parseWSevent = defaultParseWSevent
     this.animationInProgress = false
@@ -39,28 +41,24 @@ export default class VehicleAnimation {
     let self = this
     this.map.glMap.on('load', function() {
       function updateAnimation() {
-        if (self.continueAnimation()) {
-          window.requestAnimationFrame(updateAnimation)
-        }
+        if (self.continue()) window.requestAnimationFrame(updateAnimation)
       }
-
       self.webSocket.onmessage = function(event) {
-        let update = self.parseWSevent(event)
-        if (self.locationUpdate(update)) {
-          updateAnimation()
-        }
+        let message = self.parseWSevent(event)
+        if (self.updateLocation(message)) updateAnimation()
       }
     })
   }
 
-  locationUpdate(update) {
-    this.centerMapOnLocation(update.coordinates)
-    let vehicle = this.findOrInitVehicle(update.session_id)
-    vehicle.buffer.add(update.coordinates)
-    return this.startAnimation(vehicle)
+  updateLocation(message) {
+    if (this.logMessages) console.log(message)
+    this.updateMapCenter(message.coordinates)
+    let vehicle = this.findOrInitVehicle(message.session_id)
+    vehicle.buffer.add(message.coordinates)
+    return this.start(vehicle)
   }
 
-  startAnimation(vehicle) {
+  start(vehicle) {
     this.animationInProgress = (
       !this.animationInProgress &&
       vehicle.buffer.length > 1 &&
@@ -69,39 +67,36 @@ export default class VehicleAnimation {
     return this.animationInProgress
   }
 
-  continueAnimation() {
-    this.updateLayers()
-    this.animationInProgress = this.collection.map(
-      (vehicle) => { return vehicle.buffer.continue() }
-    ).some((boolean) => { return boolean })
+  continue() {
+    this.updateMap()
+    this.animationInProgress = this.collection.map((vehicle) => {
+      return vehicle.buffer.continue() // advance all the vehicles
+    }).some((boolean) => { // true if any of the buffers advanced
+      return boolean
+    })
     return this.animationInProgress
   }
 
-  updateLayers() {
+  updateMap() {
     let glMap = this.map.glMap
     this.collection.forEach(function(vehicle) {
       try {
         vehicle.layer.source.data.features[0].geometry.coordinates = vehicle.buffer.current().coordinates
         vehicle.layer.source.data.features[0].properties.bearing = vehicle.buffer.current().bearing
+        glMap.getSource(vehicle.layer.id).setData(vehicle.layer.source.data)
       } catch (err) {
         console.log('id: ', vehicle.layer.id)
         console.log('vehicle buffer ', vehicle.buffer)
         throw (err)
       }
     })
-    this.collection.forEach(function(vehicle) {
-      glMap.getSource(vehicle.layer.id).setData(vehicle.layer.source.data)
-    })
   }
 
   findOrInitVehicle(sessionId) {
     let vehicle = this.find(sessionId)
-    if (vehicle === undefined) {
-      vehicle = this.initVehicle(sessionId)
-      this.map.addLayer(vehicle.layer)
-      this.collection.push(vehicle)
-    }
-    return vehicle
+    if (vehicle !== undefined) return vehicle
+
+    return this.initVehicle(sessionId)
   }
 
   find(sessionId) {
@@ -111,16 +106,19 @@ export default class VehicleAnimation {
   }
 
   initVehicle(sessionId) {
-    return {
+    let vehicle = {
       buffer: new AnimationBuffer(this.animationSteps),
       layer: vehiclePointLayer({
         id: sessionId,
         iconImage: this.vehicleIcon
       })
     }
+    this.map.addLayer(vehicle.layer)
+    this.collection.push(vehicle)
+    return vehicle
   }
 
-  centerMapOnLocation(coordinates) {
+  updateMapCenter(coordinates) {
     if (this.panMap && this.collection.length < 2) {
       this.map.glMap.flyTo(
         this.flyToOptions(this.map.glMap.getZoom(), coordinates)
