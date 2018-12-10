@@ -2,20 +2,26 @@ import './mocks/createObjectURL.mock'
 import mapboxgl from 'mapbox-gl'
 import Map from '../src/map'
 import LayerCollection from '../src/layerCollection'
+import { getElement, setHeightStyle } from '../src/utils'
 jest.mock('../src/layerCollection')
+jest.mock('../src/utils', () => ({
+  getElement: jest.fn(() => 'HTMLElement'),
+  setHeightStyle: jest.fn(() => true)
+}))
 
 describe('Map', () => {
-  beforeAll(() => {
-    document.body.innerHTML = '<div id="tallygo-map"></div>'
-  })
-
   beforeEach(() => { mapboxgl.Map.mockClear() })
 
-  const options = { apiToken: 'foo', container: 'tallygo-map' }
+  const options = {
+    container: 'tallygo-map',
+    style: 'https://localhost/map-style.json'
+  }
 
   it('initializes a mapboxgl.Map', () => {
     let map = new Map(options)
-    expect(mapboxgl.Map).toHaveBeenCalledTimes(1)
+    expect(mapboxgl.Map).toHaveBeenCalledWith(options)
+    expect(getElement).toHaveBeenCalledWith(options.container)
+    expect(setHeightStyle).toHaveBeenCalledWith('HTMLElement')
     expect(map.glMap).toBeDefined()
     expect(map.geojson).toBeDefined()
   })
