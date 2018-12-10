@@ -14,10 +14,10 @@ import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
  *
  * @param {Object} options
  * @param {string} options.apiKey The api key to be used for all API requests and map tile requests.
- * @param {Object} options.map The JSON object specifying options that will be passed to the TallyGoKit.Map constructor
- *   See the TallyGoKit.Map documentation for valid Request configuration properties.
- * @param {Object} options.request The JSON object specifying options that will be passed to the TallyGoKit.Request constructor
- *   See the TallyGoKit.Request documentation for valid Request configuration properties.
+ * @param {Object} options.map The JSON object specifying options that will be passed to the TallyGo.Map constructor
+ *   See the TallyGo.Map documentation for valid Request configuration properties.
+ * @param {Object} options.request The JSON object specifying options that will be passed to the TallyGo.Request constructor
+ *   See the TallyGo.Request documentation for valid Request configuration properties.
  * @returns {Object}
  * @example
  * var tallygo = TallyGo.configure({

@@ -1,4 +1,4 @@
-# TallyGoKit-JS
+# TallyGo-JS
 
 ## Installation
 

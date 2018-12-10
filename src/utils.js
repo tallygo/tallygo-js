@@ -23,7 +23,7 @@ export function extend(dest, ...sources) {
 }
 
 /**
- * Enables the usage of custom Mapbox Style Specification objects with TallyGoKit-JS library.
+ * Enables the usage of custom Mapbox Style Specification objects with TallyGo-JS library.
  * Can accept a URL string, a Mapbox Style JSON object or a URL object along with an ApiKey
  * value that can be used to customize some or all parts of the TallyGo Mapbox Style object URL.
  * For more info see: https://www.mapbox.com/mapbox-gl-js/api/#map
