@@ -5,7 +5,7 @@ import Map from './map'
 import Request from './request'
 import Route from './route'
 import VehicleAnimation from './vehicleAnimation'
-import { loadJSON, extend } from './utils'
+import { loadJSON, extend, getStyle, objectFetch } from './utils'
 import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
 
 /**
@@ -29,6 +29,7 @@ import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
  */
 
 function configure (options) {
+  let style = getStyle(objectFetch(options.map, 'style'), options.apiKey)
   const mapOptions = extend(
     {apiToken: options['apiToken']}, MAP_DEFAULTS, options['map']
   )

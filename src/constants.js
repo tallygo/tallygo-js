@@ -1,10 +1,15 @@
+const STYLE_DEFAULTS = {
+  host: 'maptiles.tallygo.com',
+  traffic: 0,
+  path: 'map-style.json',
+  protocol: 'https'
+}
+
 const MAP_DEFAULTS = {
   center: [-95.84, 37.78],
   container: 'tallygo-map',
   hash: true,
   navPosition: 'top-left',
-  styleHost: 'maptiles.tallygo.com',
-  traffic: 0,
   zoom: 4
 }
 const REQUEST_DEFAULTS = {
@@ -32,4 +37,4 @@ const permittedParams = {
   minimizeDifficultLeftTurns: 'boolean'
 }
 
-export { MAP_DEFAULTS, REQUEST_DEFAULTS, permittedParams }
+export { MAP_DEFAULTS, REQUEST_DEFAULTS, STYLE_DEFAULTS, permittedParams }
