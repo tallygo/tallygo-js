@@ -17,7 +17,7 @@
 &lt;body&gt;
   &lt;div id="tallygo-map"&gt;&lt;/div&gt;
   &lt;script&gt; <code>
-    const tallygo = TallyGo.configure({apiToken: '&lt;YOUR API TOKEN&gt;'})
+    const tallygo = TallyGo.configure({apiKey: '&lt;YOUR API KEY&gt;'})
     const requestOptions = {
       startPoint: [34.76151710977818, -112.0571484988772],
       endPoint: [34.76260434283671, -112.01666952034871],
@@ -57,7 +57,7 @@ curl -X POST http://localhost:3200/simulation/start
 &lt;body&gt;
   &lt;div id="tallygo-map"&gt;&lt;/div&gt;
   &lt;script&gt; <code>
-    const tallygo = TallyGo.configure({apiToken: '&lt;YOUR API TOKEN&gt;'})
+    const tallygo = TallyGo.configure({apiKey: '&lt;YOUR API KEY&gt;'})
     const animationOptions = {
       vehicleIcon: 'car-taxi',
       animationSteps: 550,

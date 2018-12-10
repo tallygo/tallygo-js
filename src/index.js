@@ -9,11 +9,11 @@ import { loadJSON, extend, getStyle, objectFetch } from './utils'
 import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
 
 /**
- * The `configure` function is used to set the TallyGo Api Token
+ * The `configure` function is used to set the TallyGo Api Key
  * and provide other options to the `Map` and `Request` objects
  *
  * @param {Object} options
- * @param {string} options.apiToken The api token to be used for all API requests and map tile requests.
+ * @param {string} options.apiKey The api key to be used for all API requests and map tile requests.
  * @param {Object} options.map The JSON object specifying options that will be passed to the TallyGoKit.Map constructor
  *   See the TallyGoKit.Map documentation for valid Request configuration properties.
  * @param {Object} options.request The JSON object specifying options that will be passed to the TallyGoKit.Request constructor
@@ -21,7 +21,7 @@ import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
  * @returns {Object}
  * @example
  * var tallygo = TallyGo.configure({
- *   apiToken: '<Client Api Token>',
+ *   apiKey: '<Client Api Key>',
  *   map: { navPosition: 'top-left' },
  *   request: { apiUrl: 'https://api.tallygo.com/v1/route' }
  * });
@@ -31,10 +31,10 @@ import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
 function configure (options) {
   let style = getStyle(objectFetch(options.map, 'style'), options.apiKey)
   const mapOptions = extend(
-    {apiToken: options['apiToken']}, MAP_DEFAULTS, options['map']
+    {style: style}, MAP_DEFAULTS, options['map']
   )
   const requestOptions = extend(
-    {apiKey: options['apiToken']}, REQUEST_DEFAULTS, options['request']
+    {apiKey: options['apiKey']}, REQUEST_DEFAULTS, options['request']
   )
   const api = {
     map: new Map(mapOptions),

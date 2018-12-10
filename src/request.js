@@ -7,17 +7,17 @@ import { permittedParams } from './constants'
 
 /**
  * The `Request` object holds the default request parameters as well as the
- * apiToken
+ * apiKey
  *
- * You create a `Request` by specifying at least an `apiToken`.
+ * You create a `Request` by specifying at least an `apiKey`.
  *
  * @param {Object} options
- * @param {HTMLElement|string} options.apiToken The client's apiToken.
+ * @param {HTMLElement|string} options.apiKey The client's apiKey.
  * @returns {Request} request object
  *
  * @example
  * let request = new Tallygo.Request({
- *   apiToken: '<Client Api Token>'
+ *   apiKey: '<Client Api Key>'
  * })
  *
  * request.get({
