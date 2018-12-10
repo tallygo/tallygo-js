@@ -1,11 +1,11 @@
 {
   "name": "tallygo-js",
-  "version": "0.0.1",
-  "description": "Library for TallyGo API calls",
+  "version": "1.0.0",
+  "description": "Javascript wrapper library for TallyGo API calls",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "browser": "dist/browser.js",
-  "repository": "https://github.com/tallygo/TallyGoKit-JS",
+  "repository": "https://github.com/tallygo/tallygo-js",
   "author": "Eirik Dentz Sinclair <eirik@tallygo.com>",
   "license": "MIT",
   "devDependencies": {
