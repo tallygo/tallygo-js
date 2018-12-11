@@ -2,10 +2,24 @@
   "name": "tallygo-js",
   "version": "1.0.0",
   "description": "Javascript wrapper library for TallyGo API calls",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
-  "browser": "dist/browser.js",
-  "repository": "https://github.com/tallygo/tallygo-js",
+  "main": "lib/tallygo.cjs.js",
+  "module": "lib/talygo.esm.js",
+  "browser": {
+    "./lib/tallygo.cjs.js": "./lib/tallygo.browser.cjs.js",
+    "./lib/tallygo.es.js": "./lib/tallygo.browser.es.js"
+  },
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tallygo/tallygo-js"
+  },
+  "bugs": {
+    "url": "https://github.com/tallygo/tallygo-js/issues"
+  },
+  "homepage": "https://github.com/tallygo/tallygo-js#readme",
   "author": "Eirik Dentz Sinclair <eirik@tallygo.com>",
   "license": "MIT",
   "devDependencies": {
@@ -33,7 +47,7 @@
     "rollup-plugin-commonjs": "^9.1.8",
     "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-replace": "^2.0.0",
+    "rollup-plugin-replace": "^2.1.0",
     "rollup-plugin-uglify": "^2.0.1",
     "st": "^1.2.2"
   },
@@ -42,14 +56,22 @@
     "@turf/bearing": "^6.0.1",
     "@turf/distance": "^6.0.1",
     "@turf/point-to-line-distance": "^6.0.0",
+    "isomorphic-unfetch": "^3.0.0",
     "isomorphic-ws": "^4.0.1",
     "mapbox-gl": "^0.50.0",
     "ws": "^6.1.2"
   },
   "scripts": {
-    "build:dev": "rollup -c --environment BUILD:dev",
-    "watch:dev": "rollup -c --environment BUILD:dev --watch",
-    "build:min": "rollup -c --environment BUILD:production",
+    "clean": "rimraf lib dist && mkdirp lib dist",
+    "rollup:module": "rollup -c rollup/config.module.js",
+    "rollup:browser": "rollup -c rollup/config.module.browser.js",
+    "rollup:iife": "rollup -c rollup/config.iife.js",
+    "rollup:min": "rollup -c rollup/config.iife.js --environment BUILD:production",
+    "rollup": "npm-run-all --parallel rollup:module rollup:browser rollup:iife rollup:min",
+    "prepare": "npm run build",
+    "build": "npm-run-all clean rollup",
+    "build:dev": "rollup -c rollup/config.iife.js --environment BUILD:dev",
+    "watch:dev": "rollup -c rollup/config.iife.js --environment BUILD:dev --watch",
     "build:docs": "documentation build src/** -f html -o documentation",
     "start": "st --no-cache -H 0.0.0.0 --port 9966 --index index.html .",
     "lint": "eslint src/*.js spec/*.js",

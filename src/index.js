@@ -1,12 +1,12 @@
 // @flow
 
 import { version } from '../package.json'
-import Map from './map'
 import Request from './request'
 import Route from './route'
-import VehicleAnimation from './vehicleAnimation'
 import { loadJSON, extend, getStyle, objectFetch } from './utils'
 import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
+import Map from './map'
+import VehicleAnimation from './vehicleAnimation'
 
 /**
  * The `configure` function is used to set the TallyGo Api Key
@@ -29,22 +29,31 @@ import { MAP_DEFAULTS, REQUEST_DEFAULTS } from './constants'
  */
 
 function configure (options) {
-  let style = getStyle(objectFetch(options.map, 'style'), options.apiKey)
-  const mapOptions = extend(
-    {style: style}, MAP_DEFAULTS, options['map']
-  )
   const requestOptions = extend(
-    {apiKey: options['apiKey']}, REQUEST_DEFAULTS, options['request']
+    {apiKey: options.apiKey}, REQUEST_DEFAULTS, options['request']
   )
-  const api = {
-    map: new Map(mapOptions),
+  let api = {
     request: new Request(requestOptions),
     newRoute: (data) => new Route(data),
     version: version
   }
 
+  if (process.browser) {
+    let style = getStyle(objectFetch(options.map, 'style'), options.apiKey)
+    const mapOptions = extend(
+      {style: style}, MAP_DEFAULTS, options['map']
+    )
+    api['map'] = new Map(mapOptions)
+  }
+
   return api
 }
 
-const exported = { configure, loadJSON, Map, Request, VehicleAnimation }
+let exported = { configure, loadJSON, Request }
+
+if (process.browser) {
+  exported['Map'] = Map
+  exported['VehicleAnimation'] = VehicleAnimation
+}
+
 export default exported

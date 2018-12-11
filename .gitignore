@@ -63,8 +63,9 @@ typings/
 # next.js build output
 .next
 
-# Build folder
+# Build folders
 dist/
+lib/
 
 # VS Code directory
 .vscode/

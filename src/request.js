@@ -1,8 +1,7 @@
 // @flow
 /* eslint valid-jsdoc: ["error", { "requireParamDescription": false }] */
 
-// FIXME: doesn't work with jest-fetch-mock
-// import fetch from 'unfetch'
+import fetch from 'isomorphic-unfetch'
 import { permittedParams } from './constants'
 
 /**
