@@ -1,53 +1,77 @@
-# TallyGo-JS
+TallyGo-JS [![Build Status](https://travis-ci.org/tallygo/tallygo-js.svg?branch=master)](https://travis-ci.org/tallygo/tallygo-js)
+======
 
-## Installation
+TallyGo navigation API wrapper in Javascript. Also features component to animate iOS and Android client location updates on a map.
 
-### From NPM
+Quick start
+----
 
+Install via npm:
+
+    npm install tallygo-js
+    yarn install tallygo-js
+
+Or as a script tag:
+
+```html
+<script src="https://unpkg.com/tallygo@1.0.0/dist/tallygo.min.js"></script>
 ```
-npm install tallygo-kit
+
+See the examples directory for browser usage.
+
+
+API
+---
+```js
+const TallyGo = require('tallygo-js');
+const tallygo = TallyGo.configure({apiKey: '<YOUR API KEY>'})
+
+const requestOptions = {
+  startPoint: [34.76151710, -112.05714849],
+  endPoint: [34.76260434, -112.01666952],
+  time: '2018-11-13T01:31:51-0800'
+}
+
+tallygo.request.get(requestOptions).then(
+  function(json) { console.log(json) }
+)
 ```
-or
-
-```
-yarn add tallygo-kit
-```
+Development
+---
 
 
-## Development
-
-
-### Set up:
+#### Set up:
 
 ```
 yarn install
 ```
 
-### Test:
+#### Test:
 
 ```
 yarn test
 ```
 
-### Build dev bundles
+#### Build development bundles
 
 ```
 yarn build:dev
 ```
 generates javascript bundles in the `/dist` directory.
 
-### Build documentation
+#### Build documentation
 
 ```
 yarn build:docs
 ```
 generates html documentation in the `/documentation` directory.
 
-### Dev Server
+#### Run the development Server
 ```
 yarn start
 ```
 
-With dev server running, examples are here: [http://localhost:9966/examples/](http://localhost:9966/examples/)
+With development server running see the examples: [http://localhost:9966/examples/](http://localhost:9966/examples/)
 
-And documentation is available here: [http://localhost:9966/documentation/](http://localhost:9966/documentation/)
+Documentation is available here: [http://localhost:9966/documentation/](http://localhost:9966/documentation/)
+
