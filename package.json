@@ -1,6 +1,6 @@
 {
   "name": "tallygo-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Javascript wrapper library for TallyGo API calls",
   "main": "lib/tallygo.cjs.js",
   "module": "lib/talygo.esm.js",
@@ -69,6 +69,7 @@
     "rollup:min": "rollup -c rollup/config.iife.js --environment BUILD:production",
     "rollup": "npm-run-all --parallel rollup:module rollup:browser rollup:iife rollup:min",
     "prepare": "npm run build",
+    "prepublish": "npm run build",
     "build": "npm-run-all clean rollup",
     "build:dev": "rollup -c rollup/config.iife.js --environment BUILD:dev",
     "watch:dev": "rollup -c rollup/config.iife.js --environment BUILD:dev --watch",

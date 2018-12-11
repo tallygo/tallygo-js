@@ -14,7 +14,7 @@ Install via npm:
 Or as a script tag:
 
 ```html
-<script src="https://unpkg.com/tallygo@1.0.0/dist/tallygo.min.js"></script>
+<script src="https://unpkg.com/tallygo-js@1.0.1/dist/tallygo.min.js"></script>
 ```
 
 See the examples directory for browser usage.
