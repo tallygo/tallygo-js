@@ -75,13 +75,13 @@ The JSON response object has the following structure:
     * `edge` _optional_ (number) - OSM way id which starts with this point
 
 
-The library provides convenience class for working with [`Route`](http://localhost:9966/documentation/#route) objects.
+The library provides a convenience class for working with [`Route`](http://localhost:9966/documentation/#route) objects.
 
 ```js
 tallygo.request.get(requestOptions).then(
   function(json) {
-  	let route = tallygo.newRoute(json)
-  	// do something with the Route object
+  let route = tallygo.newRoute(json)
+  // do something with the Route object
   }
 )
 ```
