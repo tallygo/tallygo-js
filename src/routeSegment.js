@@ -1,6 +1,11 @@
 /**
- * Creates a container for a sequence of geographic points.
- * @param {Object} data JSON containing properties and an `Array` of `Point` objects
+ * A container for a sequence of geographic points.
+ * @param {Object} data JSON containing the segment properties and an `Array` of `Point` objects
+ * @param {number} data.distance The total travel distance in miles for this segment.
+ * @param {number} data.duration Estimated travel time in minutes for this segment.
+ * @param {string} data.originalStartNode Node ID of the edge that the start point for this segment lays on.
+ * @param {string} data.originalEndNode Node ID of the edge that end point for this segment lays on.
+ * @param {Array} data.points A sequence of every point necessary to navigate this segment.
  */
 export default class RouteSegment {
   constructor(data) {
