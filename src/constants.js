@@ -1,27 +1,28 @@
-const STYLE_DEFAULTS = {
+export const STYLE_DEFAULTS = {
   host: 'maptiles.tallygo.com',
   traffic: 0,
   path: 'map-style.json',
   protocol: 'https'
 }
 
-const MAP_DEFAULTS = {
+export const MAP_DEFAULTS = {
   center: [-95.84, 37.78],
   container: 'tallygo-map',
   hash: true,
   navPosition: 'top-left',
   zoom: 4
 }
-const REQUEST_DEFAULTS = {
-  // TODO: These aren't currently used
+export const REQUEST_DEFAULTS = {
+  apiUrl: 'https://api.tallygo.com/v1/route'
+}
+export const RequestDefaultParams = {
   course: 0,
   speed: 0,
   requestType: 'DepartureTime',
   useCarpoolLanes: false,
-  useExpressLanes: false,
-  apiUrl: 'https://api.tallygo.com/v1/route'
+  useExpressLanes: false
 }
-const permittedParams = {
+export const RequestPermittedParams = {
   requestType: 'string',
   startPoint: 'array', // TODO: make Point Type
   endPoint: 'array', // TODO: make Point Type
@@ -29,7 +30,5 @@ const permittedParams = {
   speed: 'number',
   time: 'string', // TODO: enforce type
   useCarpoolLanes: 'boolean',
-  useExpressLanes: 'boolean',
+  useExpressLanes: 'boolean'
 }
-
-export { MAP_DEFAULTS, REQUEST_DEFAULTS, STYLE_DEFAULTS, permittedParams }
