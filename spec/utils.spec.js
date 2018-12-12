@@ -1,6 +1,13 @@
-import { getStyle } from '../src/utils'
+import { getStyle, ISODateString } from '../src/utils'
 
 describe('utility functions', () => {
+  describe('ISODateString', () => {
+    it('returns the expected string', () => {
+      let date = new Date(1544601278248)
+      expect(ISODateString(date)).toEqual('2018-12-12T07:54:38Z')
+    })
+  })
+
   describe('getStyle', () => {
     it('returns the string argument when one is given', () => {
       expect(getStyle('http://stylehost.tld')).toEqual('http://stylehost.tld')

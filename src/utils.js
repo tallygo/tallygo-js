@@ -22,6 +22,17 @@ export function extend(dest, ...sources) {
   return dest
 }
 
+export function ISODateString(d) {
+  function pad(n) { return n < 10 ? '0' + n : n }
+
+  return d.getUTCFullYear() + '-' +
+    pad(d.getUTCMonth() + 1) + '-' +
+    pad(d.getUTCDate()) + 'T' +
+    pad(d.getUTCHours()) + ':' +
+    pad(d.getUTCMinutes()) + ':' +
+    pad(d.getUTCSeconds()) + 'Z'
+}
+
 /**
  * Enables the usage of custom Mapbox Style Specification objects with TallyGo-JS library.
  * Can accept a URL string, a Mapbox Style JSON object or a URL object along with an ApiKey
