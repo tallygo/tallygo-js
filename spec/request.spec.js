@@ -7,15 +7,17 @@ describe('Request', () => {
     requestType: 'DepartureTime',
     startPoint: [34.76151710977818, -112.0571484988772],
     endPoint: [34.76260434283671, -112.01666952034871],
-    course: 0,
-    speed: 0,
+    course: 180,
+    speed: 6,
     time: '2018-11-13T01:31:51-0800',
-    useCarpoolLanes: 'false',
-    useExpressLanes: 'false',
-    staticWeights: 'false',
-    minimizeDifficultLeftTurns: 'false'
+    useCarpoolLanes: true,
+    useExpressLanes: true
   }
-  const expectedUrl = 'https://api.example.com/v1/route?apiKey=fakeApiKey&coords=34.76151710977818%2C-112.0571484988772%3B34.76260434283671%2C-112.01666952034871&partitionHeuristic=false&requestType=DepartureTime&startPoint=34.76151710977818%2C-112.0571484988772&endPoint=34.76260434283671%2C-112.01666952034871&course=0&speed=0&time=2018-11-13T01%3A31%3A51-0800&useCarpoolLanes=false&useExpressLanes=false&staticWeights=false&minimizeDifficultLeftTurns=false'
+  const expectedUrl = 'https://api.example.com/v1/route?apiKey=fakeApiKey&' +
+    'coords=34.76151710977818%2C-112.0571484988772%3B34.76260434283671%2C-112.01666952034871&' +
+    'requestType=DepartureTime&startPoint=34.76151710977818%2C-112.0571484988772&' +
+    'endPoint=34.76260434283671%2C-112.01666952034871&course=180&speed=6&' +
+    'time=2018-11-13T01%3A31%3A51-0800&useCarpoolLanes=true&useExpressLanes=true'
   const request = new Request(options)
 
   it('sets the apiKey', () => {

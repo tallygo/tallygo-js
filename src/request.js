@@ -44,7 +44,6 @@ export default class Request {
     let urlParams = {
       apiKey: this.apiKey,
       coords: this._toCoordsString(params),
-      partitionHeuristic: false
     }
 
     Object.keys(permittedParams).forEach((key) => {

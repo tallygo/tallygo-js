@@ -16,12 +16,9 @@ const REQUEST_DEFAULTS = {
   // TODO: These aren't currently used
   course: 0,
   speed: 0,
-  partitionHeuristic: false,
   requestType: 'DepartureTime',
-  minimizeDifficultLeftTurns: false,
   useCarpoolLanes: false,
   useExpressLanes: false,
-  staticWeights: false,
   apiUrl: 'https://api.tallygo.com/v1/route'
 }
 const permittedParams = {
@@ -33,8 +30,6 @@ const permittedParams = {
   time: 'string', // TODO: enforce type
   useCarpoolLanes: 'boolean',
   useExpressLanes: 'boolean',
-  staticWeights: 'boolean',
-  minimizeDifficultLeftTurns: 'boolean'
 }
 
 export { MAP_DEFAULTS, REQUEST_DEFAULTS, STYLE_DEFAULTS, permittedParams }
