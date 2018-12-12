@@ -1,4 +1,3 @@
-import './mocks/createObjectURL.mock'
 import routeData from './fixtures/route.json'
 import Route from '../src/route'
 import LayerCollection from '../src/layerCollection'
