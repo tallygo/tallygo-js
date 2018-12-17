@@ -74,7 +74,7 @@
     "build:dev": "rollup -c rollup/config.iife.js --environment BUILD:dev",
     "watch:dev": "rollup -c rollup/config.iife.js --environment BUILD:dev --watch",
     "build:docs": "documentation build src/** -f html -o documentation",
-    "start": "st --no-cache -H 0.0.0.0 --port 9966 --index index.html .",
+    "start": "st --no-cache -H 0.0.0.0 --port 9966 --index examples/index.html .",
     "lint": "eslint src/*.js spec/*.js",
     "test": "run-s lint test:unit",
     "test:unit": "jest spec/** --coverage",

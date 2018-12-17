@@ -16,7 +16,7 @@
     <pre>
 &lt;body&gt;
   &lt;div id="tallygo-map"&gt;&lt;/div&gt;
-  &lt;script&gt; <code>
+  &lt;script&gt;
     const tallygo = TallyGo.configure({apiKey: '&lt;YOUR API KEY&gt;'})
     const requestOptions = {
       startPoint: [34.76151710977818, -112.0571484988772],
@@ -36,7 +36,7 @@
         )
       }
     )
-  </code>&lt;/script&gt;
+  &lt;/script&gt;
 &lt;/body&gt;
     </pre>
 
@@ -54,7 +54,7 @@ curl -X POST http://localhost:3200/simulation/start
     <pre>
 &lt;body&gt;
   &lt;div id="tallygo-map"&gt;&lt;/div&gt;
-  &lt;script&gt; <code>
+  &lt;script&gt;
     const tallygo = TallyGo.configure({apiKey: '&lt;YOUR API KEY&gt;'})
     const animationOptions = {
       vehicleIcon: 'car-taxi',
@@ -70,7 +70,7 @@ curl -X POST http://localhost:3200/simulation/start
     vehicleAnimation.webSocket.onopen = function() { console.log("socket is open") }
     vehicleAnimation.webSocket.onclose = function() { console.log("Connection is closed...") }
     vehicleAnimation.animate() // load the map and listen for location updates.
-  </code>&lt;/script&gt;
+  &lt;/script&gt;
 &lt;/body&gt;
     </pre>
   </body>
