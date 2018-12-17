@@ -22,7 +22,10 @@ import VehicleAnimation from './vehicleAnimation'
  * @example
  * var tallygo = TallyGo.configure({
  *   apiKey: '<Client Api Key>',
- *   map: { navPosition: 'top-left' },
+ *   map: {
+ *    navPosition: 'top-left',
+ *    style: { traffic: 1 }
+ *   },
  *   request: { apiUrl: 'https://api.tallygo.com/v1/route' }
  * });
  * @see [Configure the API](https://www.tallygo.com/tallygo-kit-js/examples/)
@@ -41,7 +44,7 @@ function configure (options) {
   if (process.browser) {
     let style = getStyle(objectFetch(options.map, 'style'), options.apiKey)
     const mapOptions = extend(
-      {style: style}, MAP_DEFAULTS, options['map']
+      {}, MAP_DEFAULTS, options['map'], {style: style}
     )
     api['map'] = new Map(mapOptions)
   }
