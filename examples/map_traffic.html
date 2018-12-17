@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TallyGo Map with traffic example</title>
+    <meta name="description" content="TallyGo Map with traffic example">
+    <meta name="author" content="TallyGo">
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://unpkg.com/tallygo-js@1.0.3/dist/tallygo.min.js"></script>
+  </head>
+  <body>
+    <div id="tallygo-map"></div>
+    <script>
+      const tallygo = TallyGo.configure({
+        apiKey: apiKey: '<YOUR API KEY>',
+        map: {
+          center: [-118.2655, 34.0649],
+          zoom: 13,
+          style: { traffic: 1 }
+        }
+      })
+    </script>
+  </body>
+</html>

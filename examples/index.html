@@ -10,6 +10,24 @@
     <h1>TallyGo-JS Examples</h1>
     <h4>Instructions</h4>
     <p>In order to run the following examples you'll need to open up the example files and add your api token to the TallyGo.configure call.
+    <h3><a href="/examples/map_traffic.html">Map with Traffic speeds</a></h3>
+    <h4><a href="/documentation/index.html#map">Documentation</a></h4>
+    <h4>Code</h4>
+    <pre>
+&lt;body&gt;
+  &lt;div id="tallygo-map"&gt;&lt;/div&gt;
+  &lt;script&gt;
+    const tallygo = TallyGo.configure({
+      apiKey: '&lt;YOUR API KEY&gt;',
+        map: {
+          center: [-118.2655, 34.0649],
+          zoom: 13,
+          style: { traffic: 1 }
+        }
+      })
+  &lt;/script&gt;
+&lt;/body&gt;
+    </pre>
     <h3><a href="/examples/route.html">Request and render route</a></h3>
     <h4><a href="/documentation/index.html#route">Documentation</a></h4>
     <h4>Code</h4>
