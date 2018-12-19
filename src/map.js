@@ -17,6 +17,8 @@ import { getElement, setHeightStyle } from './utils'
  * @param {Object|string} [options.style] The map's Mapbox style. This must be an a JSON object conforming to the schema described in the Mapbox Style Specification , or a URL to such JSON
  * @param {boolean} [options.hash=true] If `true`, the map's position (zoom, center latitude, center longitude, bearing, and pitch) will be synced with the hash fragment of the page's URL.
  *   For example, `http://path/to/my/page.html#2.59/39.26/53.07/-24.1/60`.
+ * @param {string} [options.navPosition=top-left] The screen position for the map's zoom controls.
+ * @param {string} [options.routeLineColor=#6495ED] The color given as a hex value to use when rendering a route on the map.
  * @param {LngLatLike} [options.center=[0, 0]] The inital geographical centerpoint of the map. If `center` is not specified in the constructor options, Mapbox GL JS will look for it in the map's style object. If it is not specified in the style, either, it will default to `[0, 0]` Note: Mapbox GL uses longitude, latitude coordinate order (as opposed to latitude, longitude) to match GeoJSON.
  * @param {number} [options.zoom=0] The initial zoom level of the map. If `zoom` is not specified in the constructor options, Mapbox GL JS will look for it in the map's style object. If it is not specified in the style, either, it will default to `0`.
  *
@@ -25,6 +27,8 @@ import { getElement, setHeightStyle } from './utils'
  *   container: 'map',
  *   center: [-95.84, 37.78],
  *   hash: true,
+ *   navPosition: 'top-left',
+ *   routeLineColor: '#0183b2',
  *   zoom: 4
  * })
  */
@@ -32,6 +36,7 @@ export default class Map {
   constructor(options) {
     setHeightStyle(getElement(options.container))
 
+    this.routeLineColor = options.routeLineColor
     this.glMap = new mapboxgl.Map(options)
     if (options.navPosition !== undefined) {
       let nav = new mapboxgl.NavigationControl()
@@ -105,7 +110,7 @@ export default class Map {
     this.resetLayers()
     let route = routes[0]
     let self = this
-    let layers = new LayerCollection(route)
+    let layers = new LayerCollection(route, this.routeLineColor)
 
     this.glMap.on('load', function() {
       layers.forEach((layer) => { self.addLayer(layer) })

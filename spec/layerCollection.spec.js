@@ -4,7 +4,7 @@ import LayerCollection from '../src/layerCollection'
 
 describe('LayerCollection', () => {
   const route = new Route(routeData)
-  const layerCollection = new LayerCollection(route)
+  const layerCollection = new LayerCollection(route, '#0183b2')
 
   it('contains the expected layers', () => {
     let acc = []
@@ -13,17 +13,7 @@ describe('LayerCollection', () => {
     })
     expect(acc).toEqual([
       'startEnd',
-      'points',
-      'line-#000000',
-      'line-#cc0000',
-      'line-#ff0000',
-      'line-#ff8800',
-      'line-#dddd00',
-      'line-#B2EE0D',
-      'line-#00ff00',
-      'line-#33FFCC',
-      'points-say',
-      'points-turn'
+      'line-#0183b2'
     ])
   })
 })

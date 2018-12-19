@@ -7,6 +7,7 @@ const colorChart = [
   '#00ff00', '#00ff00',
   '#33FFCC'
 ]
+
 const vehicleLayerDefaultOptions = {
   id: 'vehicle-point',
   iconImage: 'airport-15',
@@ -49,7 +50,7 @@ export function vehiclePointLayer(options) {
 export function startEndLayer(start, end) {
   return {
     'id': 'startEnd',
-    'type': 'symbol',
+    'type': 'circle',
     'source': {
       'type': 'geojson',
       'data': {
@@ -58,17 +59,23 @@ export function startEndLayer(start, end) {
           {
             'type': 'Feature',
             'geometry': {'type': 'Point', 'coordinates': start},
-            'properties': {'icon': 'marker-green', 'text': 'Start'}
+            'properties': {'color': '#008000', 'text': 'Start'}
           },
           {
             'type': 'Feature',
             'geometry': {'type': 'Point', 'coordinates': end},
-            'properties': {'icon': 'marker-red', 'text': 'End'}
+            'properties': {'color': '#FF0000', 'text': 'End'}
           }
         ]
       }
     },
-    'layout': {'icon-image': '{icon}', 'icon-offset': [0, -16]}
+    'paint': {
+      'circle-radius': {
+        'base': 6,
+        'stops': [[7, 3], [10, 6], [22, 44]]
+      },
+      'circle-color': {type: 'identity', property: 'color'}
+    }
   }
 }
 
@@ -81,6 +88,35 @@ export function pointLayer(points) {
     'paint': {
       'circle-radius': 4,
       'circle-opacity': {'stops': [[15, 0], [15.0, 0.3]]}
+    }
+  }
+}
+
+export function buildRouteLine(points, lineColor) {
+  return {
+    'id': 'line-' + lineColor,
+    'type': 'line',
+    'source': {
+      'type': 'geojson',
+      'data': {
+        'type': 'Feature',
+        'properties': {},
+        'geometry': {
+          'type': 'LineString',
+          'coordinates': points.features.map((point) => { return point.geometry.coordinates })
+        }
+      }
+    },
+    'layout': {
+      'line-join': 'round',
+      'line-cap': 'round'
+    },
+    'paint': {
+      'line-color': lineColor,
+      'line-width': {
+        'base': 5,
+        'stops': [[7, 3], [10, 5], [22, 44]]
+      }
     }
   }
 }

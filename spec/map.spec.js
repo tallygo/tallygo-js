@@ -14,6 +14,7 @@ describe('Map', () => {
 
   const options = {
     container: 'tallygo-map',
+    routeLineColor: '#6495ED',
     style: 'https://localhost/map-style.json'
   }
 
@@ -47,7 +48,7 @@ describe('Map', () => {
 
       const mockLayerCollectionInstance = LayerCollection.mock.instances[0]
       const callback = map.glMap.on.mock.calls[0][1]
-      expect(LayerCollection).toHaveBeenCalledWith(route)
+      expect(LayerCollection).toHaveBeenCalledWith(route, '#6495ED')
       expect(map.glMap.on).toHaveBeenCalledWith('load', callback)
       expect(map.glMap.fitBounds).not.toHaveBeenCalled()
 

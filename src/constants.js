@@ -10,6 +10,7 @@ export const MAP_DEFAULTS = {
   container: 'tallygo-map',
   hash: true,
   navPosition: 'top-left',
+  routeLineColor: '#6495ED',
   zoom: 4
 }
 export const REQUEST_DEFAULTS = {
